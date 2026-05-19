@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Models\Project;
 use App\Models\Property;
 use App\Models\User;
+use App\Models\VisitChecklistQuestion;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Tests\TestCase;
@@ -45,5 +46,58 @@ class SecurityAndReportsTest extends TestCase
             ->get(route('projects.properties.report', [$property->project, $property]))
             ->assertOk()
             ->assertHeader('content-type', 'application/pdf');
+    }
+
+    public function test_demo_account_cannot_write_data(): void
+    {
+        $demo = User::factory()->create(['email' => 'demo@immoradar.test']);
+        $project = Project::factory()->for($demo)->create();
+        $property = Property::factory()->for($project)->create();
+        $question = VisitChecklistQuestion::create([
+            'category' => 'Quartier',
+            'question' => 'Le quartier semble-t-il calme ?',
+            'weight' => 1,
+            'is_active' => true,
+        ]);
+
+        $this->actingAs($demo)
+            ->postJson(route('projects.properties.visit.answer', [$project, $property]), [
+                'question_id' => $question->id,
+                'answer' => 'yes',
+            ])
+            ->assertStatus(423);
+
+        $this->assertDatabaseMissing('property_checklist_answers', [
+            'property_id' => $property->id,
+            'visit_checklist_question_id' => $question->id,
+        ]);
+    }
+
+    public function test_visit_answer_autosave_updates_a_question(): void
+    {
+        $property = Property::factory()->create();
+        $question = VisitChecklistQuestion::create([
+            'category' => 'Quartier',
+            'question' => 'Le quartier semble-t-il calme ?',
+            'weight' => 1,
+            'is_active' => true,
+        ]);
+
+        $this->actingAs($property->project->user)
+            ->postJson(route('projects.properties.visit.answer', [$property->project, $property]), [
+                'question_id' => $question->id,
+                'answer' => 'yes',
+                'comment' => 'calme pendant la visite',
+            ])
+            ->assertOk()
+            ->assertJsonPath('answered_count', 1)
+            ->assertJsonPath('total_questions', 1);
+
+        $this->assertDatabaseHas('property_checklist_answers', [
+            'property_id' => $property->id,
+            'visit_checklist_question_id' => $question->id,
+            'answer' => 'yes',
+            'comment' => 'calme pendant la visite',
+        ]);
     }
 }

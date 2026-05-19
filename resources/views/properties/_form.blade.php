@@ -1,9 +1,11 @@
 @csrf
+@php($isEditing = $property->exists)
 
 <div class="grid gap-6">
     <section class="ir-panel p-5">
-        <h2 class="text-lg font-black text-slate-950">Bien</h2>
-        <p class="mt-1 text-sm text-slate-600">Commence par les infos qui permettent déjà de comparer.</p>
+        <p class="text-sm font-black uppercase text-teal-700">Étape 1</p>
+        <h2 class="mt-1 text-lg font-black text-slate-950">Infos essentielles</h2>
+        <p class="mt-1 text-sm text-slate-600">Titre, ville, prix, surface. Avec ça, tu peux déjà commencer à comparer.</p>
         <div class="mt-4 grid gap-4 md:grid-cols-2">
             <div>
                 <x-input-label for="title" value="Titre" />
@@ -12,14 +14,6 @@
             <div>
                 <x-input-label for="city" value="Ville" />
                 <x-text-input id="city" name="city" class="mt-1 block w-full" value="{{ old('city', $property->city) }}" required />
-            </div>
-            <div>
-                <x-input-label for="listing_url" value="Lien annonce" />
-                <x-text-input id="listing_url" name="listing_url" type="url" class="mt-1 block w-full" value="{{ old('listing_url', $property->listing_url) }}" />
-            </div>
-            <div>
-                <x-input-label for="address" value="Adresse" />
-                <x-text-input id="address" name="address" class="mt-1 block w-full" value="{{ old('address', $property->address) }}" />
             </div>
             <div>
                 <x-input-label for="property_type" value="Type de bien" />
@@ -37,12 +31,6 @@
                     @endforeach
                 </select>
             </div>
-        </div>
-    </section>
-
-    <section class="ir-panel p-5">
-        <h2 class="text-lg font-black text-slate-950">Prix et logement</h2>
-        <div class="mt-4 grid gap-4 md:grid-cols-4">
             @foreach([
                 'price' => ['Prix', '1000'],
                 'surface' => ['Surface', '1'],
@@ -54,6 +42,14 @@
                     <x-text-input :id="$field" :name="$field" type="number" :step="$step" class="mt-1 block w-full" value="{{ old($field, $property->{$field}) }}" />
                 </div>
             @endforeach
+        </div>
+    </section>
+
+    <section class="ir-panel p-5">
+        <p class="text-sm font-black uppercase text-teal-700">Étape 2</p>
+        <h2 class="mt-1 text-lg font-black text-slate-950">Critères utiles</h2>
+        <p class="mt-1 text-sm text-slate-600">DPE, trajet et stationnement suffisent souvent à faire sortir les premières alertes.</p>
+        <div class="mt-4 grid gap-4 md:grid-cols-4">
             <div>
                 <x-input-label for="dpe" value="DPE" />
                 <select id="dpe" name="dpe" class="mt-1 block w-full rounded-md border-slate-300 focus:border-teal-600 focus:ring-teal-600">
@@ -78,6 +74,14 @@
                     @endforeach
                 </select>
             </div>
+            <div>
+                <x-input-label for="listing_url" value="Lien annonce" />
+                <x-text-input id="listing_url" name="listing_url" type="url" class="mt-1 block w-full" value="{{ old('listing_url', $property->listing_url) }}" />
+            </div>
+            <div>
+                <x-input-label for="address" value="Adresse" />
+                <x-text-input id="address" name="address" class="mt-1 block w-full" value="{{ old('address', $property->address) }}" />
+            </div>
         </div>
         <div class="mt-4 grid gap-3 md:grid-cols-3">
             @foreach(['has_garage' => 'Garage', 'has_parking' => 'Parking', 'has_balcony' => 'Balcon', 'has_garden' => 'Jardin', 'has_cellar' => 'Cave', 'has_elevator' => 'Ascenseur'] as $field => $label)
@@ -89,9 +93,9 @@
         </div>
     </section>
 
-    <section class="ir-panel border-amber-200 bg-amber-50/50 p-5">
-        <h2 class="text-lg font-black text-slate-950">Coût réel mensuel</h2>
-        <p class="mt-1 text-sm text-slate-600">Estimation indicative, à confirmer avec une banque, un courtier ou un professionnel.</p>
+    <details class="ir-panel border-amber-200 bg-amber-50/50 p-5" {{ $isEditing ? 'open' : '' }}>
+        <summary class="cursor-pointer text-lg font-black text-slate-950">Budget détaillé et coût réel mensuel</summary>
+        <p class="mt-2 text-sm text-slate-600">À remplir quand tu veux fiabiliser la décision. Estimation indicative, à confirmer avec une banque, un courtier ou un professionnel.</p>
         <div class="mt-4 grid gap-4 md:grid-cols-4">
             @foreach([
                 'monthly_charges' => 'Charges / mois',
@@ -110,10 +114,10 @@
                 </div>
             @endforeach
         </div>
-    </section>
+    </details>
 
-    <section class="ir-panel p-5">
-        <h2 class="text-lg font-black text-slate-950">Ressenti et notes</h2>
+    <details class="ir-panel p-5" {{ $isEditing ? 'open' : '' }}>
+        <summary class="cursor-pointer text-lg font-black text-slate-950">Ressenti, photo et notes</summary>
         <div class="mt-4 grid gap-4 md:grid-cols-3">
             <div>
                 <x-input-label for="hot_feeling_score" value="Ressenti à chaud /10" />
@@ -134,7 +138,7 @@
                 <textarea id="{{ $field }}" name="{{ $field }}" rows="3" class="mt-1 block w-full rounded-md border-slate-300 focus:border-teal-600 focus:ring-teal-600">{{ old($field, $property->{$field}) }}</textarea>
             </div>
         @endforeach
-    </section>
+    </details>
 </div>
 
 @if($errors->any())

@@ -17,6 +17,13 @@
     <body class="font-sans antialiased text-slate-900">
         <div class="min-h-screen">
             @include('layouts.navigation')
+            @auth
+                @if(Auth::user()->isDemoAccount())
+                    <div class="border-b border-amber-200 bg-amber-50 px-4 py-2 text-center text-sm font-semibold text-amber-950">
+                        Compte démo en lecture seule. Crée ton propre compte pour modifier les données.
+                    </div>
+                @endif
+            @endauth
 
             @isset($header)
                 <header class="border-b border-white/70 bg-white/60 shadow-sm shadow-slate-200/60 backdrop-blur">

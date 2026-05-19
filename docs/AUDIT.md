@@ -12,6 +12,7 @@ Statut : validé.
 - Calcul du coût réel mensuel.
 - Checklist de visite mobile-friendly.
 - Inscription protégée par code d'accès optionnel, honeypot et rate limit.
+- Compte démo protégé en lecture seule pour éviter les modifications publiques.
 - Scores expliqués : compatibilité, solidité, projection, vigilance.
 - Alertes automatiques.
 - Verdict automatique.
@@ -38,6 +39,7 @@ Statut : validé pour une V1.
 - Le dashboard projet met en avant le meilleur bien, les risques et les informations à compléter.
 - Le mode visite utilise de gros choix rapides adaptés mobile.
 - Le mode visite rappelle clairement que les réponses sont modifiables puis enregistrées avec le bouton en bas.
+- Le mode visite sauvegarde automatiquement les réponses pour les vrais comptes.
 - L'interface a été retravaillée pour être moins administrative : couleurs par usage, actions prioritaires, cartes plus lisibles.
 - Le vocabulaire reste simple et non marketing.
 
@@ -57,6 +59,7 @@ Statut : validé.
 - Rate limit dédié sur `POST /register`.
 - Code d'accès privé possible via `REGISTRATION_ACCESS_CODE`.
 - Honeypot invisible et délai minimum de soumission sur l'inscription.
+- Middleware `PreventDemoWrites` pour bloquer les écritures du compte démo.
 
 ## Audit Technique
 
@@ -80,6 +83,7 @@ Corrections effectuées pendant audit :
 - lien storage public généré localement.
 - refonte UI des pages clés : login, register, projets, dashboard projet, biens, fiche bien, comparaison, mode visite.
 - page statique GitHub Pages ajoutée dans `docs/index.html`.
+- checklist de déploiement public ajoutée dans `docs/DEPLOYMENT.md`.
 
 ## Audit Tests
 

@@ -177,6 +177,18 @@ https://quentinvg.github.io/immoradar/
 
 Pour utiliser l'application complète, lance-la localement ou déploie-la sur un hébergement compatible Laravel.
 
+## Déploiement Public
+
+La checklist de déploiement est disponible dans [`docs/DEPLOYMENT.md`](docs/DEPLOYMENT.md).
+
+À retenir avant mise en ligne :
+
+- `APP_DEBUG=false` ;
+- `REGISTRATION_ACCESS_CODE` obligatoire ;
+- compte démo en lecture seule ;
+- base de données sauvegardée ;
+- hébergement compatible Laravel, par exemple Laravel Cloud, Railway ou VPS.
+
 Le seeder crée un projet :
 
 ```text

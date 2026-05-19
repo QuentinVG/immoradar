@@ -42,4 +42,9 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->hasMany(Project::class);
     }
+
+    public function isDemoAccount(): bool
+    {
+        return $this->email === 'demo@immoradar.test';
+    }
 }

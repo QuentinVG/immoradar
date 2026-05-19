@@ -27,6 +27,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('projects.properties', PropertyController::class);
     Route::get('projects/{project}/properties/{property}/visit', [VisitChecklistController::class, 'edit'])->name('projects.properties.visit');
     Route::post('projects/{project}/properties/{property}/visit', [VisitChecklistController::class, 'update'])->name('projects.properties.visit.update');
+    Route::post('projects/{project}/properties/{property}/visit/answer', [VisitChecklistController::class, 'updateAnswer'])->name('projects.properties.visit.answer');
     Route::get('projects/{project}/properties/{property}/report', [ReportController::class, 'property'])->name('projects.properties.report');
 });
 

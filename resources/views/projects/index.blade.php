@@ -54,9 +54,27 @@
                     </dl>
                 </a>
             @empty
-                <div class="ir-panel border-dashed border-teal-300 p-8 text-center md:col-span-2 xl:col-span-3">
-                    <h2 class="text-lg font-black text-slate-950">Commence par créer ton projet de recherche.</h2>
-                    <p class="mt-2 text-slate-600">Un projet sert à comparer les biens avec les mêmes critères.</p>
+                <div class="ir-panel border-dashed border-teal-300 p-8 md:col-span-2 xl:col-span-3">
+                    <div class="mx-auto max-w-3xl text-center">
+                        <p class="text-sm font-black uppercase text-teal-700">Premiers pas</p>
+                        <h2 class="mt-2 text-2xl font-black text-slate-950">Crée ton projet, puis ajoute 2 ou 3 biens.</h2>
+                        <p class="mt-2 text-slate-600">Tu n'as pas besoin de tout remplir tout de suite. Commence par budget, ville, surface et trajet.</p>
+                        <a href="{{ route('projects.create') }}" class="ir-action-primary mt-5">Créer mon premier projet</a>
+                    </div>
+                    <div class="mt-8 grid gap-3 md:grid-cols-3">
+                        <div class="rounded-lg bg-teal-50 p-4">
+                            <strong class="text-slate-950">1. Projet</strong>
+                            <p class="mt-1 text-sm text-slate-600">Budget, mensualité cible, critères importants.</p>
+                        </div>
+                        <div class="rounded-lg bg-amber-50 p-4">
+                            <strong class="text-slate-950">2. Biens</strong>
+                            <p class="mt-1 text-sm text-slate-600">Ajout manuel des biens à comparer, sans scraping.</p>
+                        </div>
+                        <div class="rounded-lg bg-rose-50 p-4">
+                            <strong class="text-slate-950">3. Visite</strong>
+                            <p class="mt-1 text-sm text-slate-600">Checklist mobile, alertes, verdict et PDF.</p>
+                        </div>
+                    </div>
                 </div>
             @endforelse
         </div>
