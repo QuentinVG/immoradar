@@ -1,0 +1,51 @@
+services:
+  app:
+    build:
+      context: .
+    working_dir: /var/www/html
+    volumes:
+      - .:/var/www/html
+    ports:
+      - "8000:8000"
+    environment:
+      APP_ENV: local
+      APP_URL: http://127.0.0.1:8000
+      DB_CONNECTION: mysql
+      DB_HOST: db
+      DB_PORT: 3306
+      DB_DATABASE: immoradar
+      DB_USERNAME: immoradar
+      DB_PASSWORD: immoradar
+    depends_on:
+      db:
+        condition: service_healthy
+    command: sh -c "composer install && php artisan serve --host=0.0.0.0 --port=8000"
+
+  vite:
+    image: node:24-alpine
+    working_dir: /var/www/html
+    volumes:
+      - .:/var/www/html
+    ports:
+      - "5173:5173"
+    command: sh -c "npm install && npm run dev -- --host=0.0.0.0"
+
+  db:
+    image: mysql:8.4
+    environment:
+      MYSQL_DATABASE: immoradar
+      MYSQL_USER: immoradar
+      MYSQL_PASSWORD: immoradar
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - "3306:3306"
+    volumes:
+      - db-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-proot"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  db-data:

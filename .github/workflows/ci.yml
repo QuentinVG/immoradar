@@ -1,0 +1,51 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.4"
+          extensions: dom, fileinfo, gd, mbstring, pdo_sqlite, sqlite, zip
+          coverage: none
+
+      - name: Setup Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: "24"
+          cache: npm
+
+      - name: Install PHP dependencies
+        run: composer install --no-interaction --prefer-dist --no-progress
+
+      - name: Install Node dependencies
+        run: npm ci
+
+      - name: Prepare application
+        run: |
+          cp .env.example .env
+          php artisan key:generate
+          php artisan storage:link
+
+      - name: Build assets
+        run: npm run build
+
+      - name: Pint
+        run: vendor/bin/pint --test
+
+      - name: PHPStan
+        run: vendor/bin/phpstan analyse --memory-limit=1G
+
+      - name: Tests
+        run: php artisan test
