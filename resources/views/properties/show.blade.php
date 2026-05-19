@@ -70,6 +70,25 @@
             @endif
         </section>
 
+        <section class="grid gap-4 lg:grid-cols-3">
+            <div class="ir-panel p-5">
+                <p class="text-sm font-black uppercase text-teal-700">Qualité des infos</p>
+                <p class="mt-2 text-3xl font-black text-slate-950">{{ $scores['confidence_level'] }}</p>
+                <p class="mt-2 text-sm leading-6 text-slate-600">Plus la confiance est élevée, plus le verdict est exploitable.</p>
+            </div>
+            <div class="ir-panel p-5">
+                <p class="text-sm font-black uppercase text-amber-700">Checklist visite</p>
+                <p class="mt-2 text-3xl font-black text-slate-950">{{ $checklistProgress }}%</p>
+                <p class="mt-2 text-sm text-slate-600">{{ $answeredQuestions }}/{{ $activeQuestions }} réponses utiles.</p>
+                <a href="{{ route('projects.properties.visit', [$project, $property]) }}" class="mt-3 inline-flex text-sm font-black text-teal-700">Continuer la visite</a>
+            </div>
+            <div class="ir-panel p-5">
+                <p class="text-sm font-black uppercase text-rose-700">Alertes ouvertes</p>
+                <p class="mt-2 text-3xl font-black text-slate-950">{{ $property->alerts->where('is_resolved', false)->count() }}</p>
+                <p class="mt-2 text-sm leading-6 text-slate-600">À réduire avant offre, surtout si elles touchent budget, DPE ou travaux.</p>
+            </div>
+        </section>
+
         <section class="grid gap-4 md:grid-cols-4">
             @foreach(['compatibility' => 'Compatibilité', 'solidity' => 'Solidité', 'projection' => 'Projection', 'vigilance' => 'Vigilance'] as $key => $label)
                 <div class="ir-panel p-5">

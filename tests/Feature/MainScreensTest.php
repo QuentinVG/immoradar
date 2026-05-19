@@ -11,6 +11,22 @@ class MainScreensTest extends TestCase
 {
     use RefreshDatabase;
 
+    public function test_public_homepage_and_seo_files_render(): void
+    {
+        $this->get('/')
+            ->assertOk()
+            ->assertSee('Visite un bien sans te laisser embarquer')
+            ->assertSee('SoftwareApplication');
+
+        $this->get('/robots.txt')
+            ->assertOk()
+            ->assertSee('Sitemap:');
+
+        $this->get('/sitemap.xml')
+            ->assertOk()
+            ->assertSee('<urlset', false);
+    }
+
     public function test_main_authenticated_screens_render(): void
     {
         VisitChecklistQuestion::create([

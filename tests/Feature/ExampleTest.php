@@ -14,6 +14,8 @@ class ExampleTest extends TestCase
     {
         $response = $this->get('/');
 
-        $response->assertRedirect('/projects');
+        $response
+            ->assertOk()
+            ->assertSee('Visite un bien sans te laisser embarquer');
     }
 }

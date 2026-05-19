@@ -6,11 +6,44 @@ use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\PropertyController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\VisitChecklistController;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return redirect()->route('projects.index');
-});
+    return Auth::check()
+        ? redirect()->route('projects.index')
+        : view('marketing.home');
+})->name('marketing.home');
+
+Route::get('/robots.txt', function () {
+    $url = rtrim(config('app.url'), '/');
+
+    return response(
+        "User-agent: *\n".
+        "Allow: /\n".
+        "Sitemap: {$url}/sitemap.xml\n",
+        200,
+        ['Content-Type' => 'text/plain; charset=UTF-8']
+    );
+})->name('robots');
+
+Route::get('/sitemap.xml', function () {
+    $url = e(rtrim(config('app.url'), '/'));
+
+    return response(
+        <<<XML
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>{$url}/</loc>
+    <priority>1.0</priority>
+  </url>
+</urlset>
+XML,
+        200,
+        ['Content-Type' => 'application/xml; charset=UTF-8']
+    );
+})->name('sitemap');
 
 Route::get('/dashboard', function () {
     return redirect()->route('projects.index');

@@ -11,6 +11,33 @@
     </x-slot>
 
     <div class="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+        <section class="mb-5 grid gap-3 md:grid-cols-4">
+            @foreach([
+                'best_score' => ['Meilleur score', 'compatibility', 'text-teal-800'],
+                'lowest_cost' => ['Coût le plus bas', 'real_monthly_cost', 'text-amber-800'],
+                'lowest_risk' => ['Moins risqué', 'vigilance', 'text-rose-700'],
+                'best_projection' => ['Meilleure projection', 'projection', 'text-slate-950'],
+            ] as $key => [$label, $metric, $color])
+                <div class="ir-panel p-4">
+                    <p class="text-xs font-black uppercase text-slate-500">{{ $label }}</p>
+                    @if($highlights[$key])
+                        <a href="{{ route('projects.properties.show', [$project, $highlights[$key]['property']]) }}" class="mt-2 block font-black text-slate-950 hover:text-teal-800">
+                            {{ $highlights[$key]['property']->title }}
+                        </a>
+                        <p class="mt-2 text-2xl font-black {{ $color }}">
+                            @if($metric === 'real_monthly_cost')
+                                {{ number_format($highlights[$key][$metric], 0, ',', ' ') }} €
+                            @else
+                                {{ $highlights[$key][$metric] }}/100
+                            @endif
+                        </p>
+                    @else
+                        <p class="mt-2 text-sm text-slate-500">Pas encore disponible.</p>
+                    @endif
+                </div>
+            @endforeach
+        </section>
+
         <form method="GET" class="ir-soft-panel mb-4 inline-flex items-center gap-3 p-3">
             <label class="text-sm font-black text-slate-700">Trier par</label>
             <select name="sort" onchange="this.form.submit()" class="rounded-md border-slate-300 text-sm focus:border-teal-600 focus:ring-teal-600">

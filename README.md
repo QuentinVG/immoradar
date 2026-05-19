@@ -48,10 +48,14 @@ Les calculs financiers sont volontairement affichés comme indicatifs.
 - Alertes automatiques : budget dépassé, DPE mauvais, charges inconnues, trajet long, garage manquant, coup de cœur risqué, etc.
 - Verdict automatique avec points forts, points de vigilance et prochaines actions.
 - Dashboard projet : meilleur bien, coup de cœur risqué, top 3, informations manquantes.
+- Niveau de décision projet : indique si la comparaison est assez mûre ou encore trop fragile.
 - Comparateur de biens avec tris utiles.
+- Points forts du comparateur : meilleur score, coût le plus bas, bien le moins risqué, meilleure projection.
+- Fiche bien enrichie : qualité des informations, avancement checklist, alertes ouvertes.
 - Rapport PDF par bien.
 - Rapport PDF comparatif du projet.
 - Données de démonstration réalistes.
+- Page publique SEO avec meta description, canonical, JSON-LD, sitemap et robots.txt.
 
 ## Stack Technique
 
@@ -164,6 +168,21 @@ Quand cette variable est définie, le formulaire d'inscription demande le code. 
 - délai minimum avant soumission du formulaire.
 
 Ce choix est volontairement simple : pas de CAPTCHA externe, pas de service tiers, pas de friction inutile pour une instance personnelle.
+
+## SEO Et Indexation
+
+La V2 ajoute une vraie page publique sur `/`, au lieu de rediriger directement vers l'authentification. Cette page présente le produit avec du contenu lisible par les moteurs de recherche :
+
+- balise title et meta description dédiées ;
+- URL canonique ;
+- balises Open Graph ;
+- JSON-LD `SoftwareApplication` ;
+- route `/sitemap.xml` ;
+- route `/robots.txt`.
+
+Les pages privées de l'application restent derrière authentification et les layouts app/auth incluent `noindex, nofollow`. L'objectif est clair : indexer la présentation publique, pas les données utilisateur.
+
+Pense à configurer `APP_URL` avec l'URL publique finale avant déploiement pour que le sitemap et les balises canoniques utilisent le bon domaine.
 
 ## GitHub Pages
 

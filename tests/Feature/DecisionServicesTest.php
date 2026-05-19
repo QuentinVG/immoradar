@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\Project;
 use App\Models\Property;
+use App\Services\ProjectSummaryService;
 use App\Services\PropertyAlertService;
 use App\Services\PropertyScoringService;
 use App\Services\PropertyVerdictService;
@@ -62,5 +63,17 @@ class DecisionServicesTest extends TestCase
         $verdict = app(PropertyVerdictService::class)->verdict($property);
 
         $this->assertSame('Coup de cœur risqué', $verdict['title']);
+    }
+
+    public function test_project_summary_exposes_decision_readiness(): void
+    {
+        $project = Project::factory()->create();
+        Property::factory()->count(2)->for($project)->create(['monthly_charges' => null]);
+
+        $summary = app(ProjectSummaryService::class)->summarize($project);
+
+        $this->assertArrayHasKey('decision_readiness', $summary);
+        $this->assertSame('Trop tôt pour décider', $summary['decision_readiness']['label']);
+        $this->assertNotEmpty($summary['decision_readiness']['actions']);
     }
 }

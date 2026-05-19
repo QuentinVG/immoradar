@@ -6,6 +6,7 @@ use App\Http\Requests\StorePropertyRequest;
 use App\Http\Requests\UpdatePropertyRequest;
 use App\Models\Project;
 use App\Models\Property;
+use App\Models\VisitChecklistQuestion;
 use App\Services\ProjectSummaryService;
 use App\Services\PropertyAlertService;
 use App\Services\PropertyCostCalculator;
@@ -60,6 +61,8 @@ class PropertyController extends Controller
         $this->guardProperty($project, $property);
         $alertService->refresh($property);
         $property->load(['alerts', 'checklistAnswers.question']);
+        $activeQuestions = VisitChecklistQuestion::query()->where('is_active', true)->count();
+        $answeredQuestions = $property->checklistAnswers->where('answer', '!=', 'unknown')->count();
 
         return view('properties.show', [
             'project' => $project,
@@ -67,6 +70,9 @@ class PropertyController extends Controller
             'cost' => $costCalculator->calculate($property),
             'scores' => $scoringService->score($property),
             'verdict' => $verdictService->verdict($property),
+            'checklistProgress' => $activeQuestions > 0 ? (int) round(($answeredQuestions / $activeQuestions) * 100) : 0,
+            'answeredQuestions' => $answeredQuestions,
+            'activeQuestions' => $activeQuestions,
         ]);
     }
 

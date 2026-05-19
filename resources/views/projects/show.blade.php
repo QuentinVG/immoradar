@@ -38,6 +38,33 @@
             </div>
         </section>
 
+        <section class="ir-panel overflow-hidden p-6">
+            <div class="grid gap-6 lg:grid-cols-[0.8fr_1.2fr] lg:items-center">
+                <div>
+                    <p class="text-sm font-black uppercase text-teal-700">Niveau de décision</p>
+                    <h2 class="mt-2 text-3xl font-black text-slate-950">{{ $summary['decision_readiness']['label'] }}</h2>
+                    <p class="mt-3 text-5xl font-black text-teal-800">{{ $summary['decision_readiness']['score'] }}/100</p>
+                    <div class="mt-4 h-2 rounded-full bg-slate-100">
+                        <div class="h-2 rounded-full bg-teal-700" style="width: {{ $summary['decision_readiness']['score'] }}%"></div>
+                    </div>
+                </div>
+                <div class="grid gap-3">
+                    <div class="rounded-lg bg-amber-50 p-4">
+                        <span class="text-sm font-semibold text-slate-600">Checklists remplies</span>
+                        <strong class="mt-1 block text-2xl text-amber-950">{{ $summary['decision_readiness']['checklist_progress'] }}%</strong>
+                    </div>
+                    <div class="rounded-lg bg-slate-50 p-4">
+                        <span class="text-sm font-semibold text-slate-600">À faire avant de trancher</span>
+                        <ul class="mt-2 space-y-1 text-sm text-slate-700">
+                            @foreach($summary['decision_readiness']['actions'] as $action)
+                                <li>{{ $action }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <section class="grid gap-4 lg:grid-cols-2">
             <div class="ir-panel border-teal-200 bg-teal-50/70 p-6">
                 <p class="text-sm font-black uppercase text-teal-700">Meilleur choix actuel</p>
