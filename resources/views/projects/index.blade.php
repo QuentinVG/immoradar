@@ -1,43 +1,61 @@
 <x-app-layout>
     <x-slot name="header">
-        <div class="flex flex-wrap items-center justify-between gap-3">
+        <div class="flex flex-wrap items-center justify-between gap-4">
             <div>
-                <h1 class="text-2xl font-bold text-slate-900">ImmoRadar</h1>
-                <p class="mt-1 text-sm text-slate-600">Compare tes biens, prépare tes visites et décide plus calmement.</p>
+                <p class="text-sm font-black uppercase text-teal-700">Tableau de bord</p>
+                <h1 class="mt-1 text-3xl font-black text-slate-950">Tes recherches immobilières</h1>
+                <p class="mt-1 text-sm text-slate-600">Ajoute un projet, compare les biens, puis garde seulement ceux qui méritent une visite.</p>
             </div>
-            <a href="{{ route('projects.create') }}" class="rounded-md bg-emerald-700 px-4 py-2 text-sm font-semibold text-white">Nouveau projet</a>
+            <a href="{{ route('projects.create') }}" class="ir-action-primary">Nouveau projet</a>
         </div>
     </x-slot>
 
-    <div class="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+    <div class="mx-auto max-w-7xl space-y-6 px-4 py-8 sm:px-6 lg:px-8">
         @if(session('status'))
-            <div class="mb-4 rounded-md bg-emerald-50 p-4 text-sm text-emerald-800">{{ session('status') }}</div>
+            <div class="rounded-md border border-teal-200 bg-teal-50 p-4 text-sm font-semibold text-teal-900">{{ session('status') }}</div>
         @endif
+
+        <section class="grid gap-4 lg:grid-cols-[1.15fr_0.85fr]">
+            <div class="ir-panel overflow-hidden bg-slate-950 p-6 text-white">
+                <p class="text-sm font-black uppercase text-amber-300">Parcours rapide</p>
+                <h2 class="mt-2 text-2xl font-black">1 projet, 3 biens, 1 checklist, une décision plus calme.</h2>
+                <div class="mt-5 grid gap-3 text-sm sm:grid-cols-3">
+                    <span class="rounded-lg border border-white/10 bg-white/10 p-3">Coût réel</span>
+                    <span class="rounded-lg border border-white/10 bg-white/10 p-3">Alertes</span>
+                    <span class="rounded-lg border border-white/10 bg-white/10 p-3">Verdict</span>
+                </div>
+            </div>
+            <div class="ir-soft-panel p-6">
+                <p class="text-sm font-black uppercase text-rose-700">Rappel utile</p>
+                <h2 class="mt-2 text-xl font-black text-slate-950">Le coup de cœur vient après les vérifications.</h2>
+                <p class="mt-2 text-sm leading-6 text-slate-600">ImmoRadar met les risques avant la décision : budget, DPE, trajet, travaux, charges, infos manquantes.</p>
+            </div>
+        </section>
 
         <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
             @forelse($projects as $project)
-                <a href="{{ route('projects.show', $project) }}" class="rounded-lg border border-slate-200 bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
+                <a href="{{ route('projects.show', $project) }}" class="ir-panel group p-5 transition hover:-translate-y-0.5 hover:border-teal-300 hover:shadow-lg hover:shadow-teal-900/10">
                     <div class="flex items-start justify-between gap-3">
                         <div>
-                            <h2 class="text-lg font-semibold text-slate-900">{{ $project->name }}</h2>
+                            <h2 class="text-lg font-black text-slate-950 group-hover:text-teal-800">{{ $project->name }}</h2>
                             <p class="mt-1 text-sm capitalize text-slate-500">{{ $project->type }}</p>
                         </div>
-                        <span class="rounded-md bg-slate-100 px-2 py-1 text-xs font-semibold text-slate-700">{{ $project->properties_count }} biens</span>
+                        <span class="rounded-md bg-teal-50 px-2 py-1 text-xs font-black text-teal-800">{{ $project->properties_count }} biens</span>
                     </div>
                     <dl class="mt-5 grid grid-cols-2 gap-3 text-sm">
-                        <div>
+                        <div class="rounded-md bg-slate-50 p-3">
                             <dt class="text-slate-500">Budget</dt>
-                            <dd class="font-semibold text-slate-900">{{ $project->max_budget ? number_format((float) $project->max_budget, 0, ',', ' ') . ' €' : 'À définir' }}</dd>
+                            <dd class="font-black text-slate-950">{{ $project->max_budget ? number_format((float) $project->max_budget, 0, ',', ' ') . ' €' : 'À définir' }}</dd>
                         </div>
-                        <div>
+                        <div class="rounded-md bg-amber-50 p-3">
                             <dt class="text-slate-500">Mensualité cible</dt>
-                            <dd class="font-semibold text-slate-900">{{ $project->target_monthly_cost ? number_format((float) $project->target_monthly_cost, 0, ',', ' ') . ' €/mois' : 'À définir' }}</dd>
+                            <dd class="font-black text-slate-950">{{ $project->target_monthly_cost ? number_format((float) $project->target_monthly_cost, 0, ',', ' ') . ' €/mois' : 'À définir' }}</dd>
                         </div>
                     </dl>
                 </a>
             @empty
-                <div class="rounded-lg border border-dashed border-slate-300 bg-white p-8 text-center md:col-span-2 xl:col-span-3">
-                    <h2 class="text-lg font-semibold text-slate-900">Commence par créer ton projet de recherche.</h2>
+                <div class="ir-panel border-dashed border-teal-300 p-8 text-center md:col-span-2 xl:col-span-3">
+                    <h2 class="text-lg font-black text-slate-950">Commence par créer ton projet de recherche.</h2>
                     <p class="mt-2 text-slate-600">Un projet sert à comparer les biens avec les mêmes critères.</p>
                 </div>
             @endforelse

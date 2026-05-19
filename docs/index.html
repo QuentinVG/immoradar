@@ -1,0 +1,244 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ImmoRadar - Assistant de décision immobilière</title>
+    <meta
+      name="description"
+      content="ImmoRadar aide à comparer des biens immobiliers, préparer les visites, estimer le coût réel mensuel et décider plus rationnellement."
+    />
+    <style>
+      :root {
+        --ink: #101828;
+        --muted: #596579;
+        --line: #d9e2df;
+        --teal: #0f766e;
+        --teal-dark: #134e4a;
+        --amber: #fbbf24;
+        --rose: #be123c;
+        --bg: #f8f6ef;
+        --surface: #ffffff;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        color: var(--ink);
+        background: linear-gradient(180deg, var(--bg), #edf7f4 46%, #f8fafc);
+        font-family:
+          Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      }
+
+      main {
+        width: min(1120px, calc(100% - 32px));
+        margin: 0 auto;
+      }
+
+      .hero {
+        display: grid;
+        min-height: 88vh;
+        grid-template-columns: minmax(0, 1.05fr) minmax(320px, 0.75fr);
+        gap: 48px;
+        align-items: center;
+        padding: 56px 0;
+      }
+
+      .eyebrow {
+        margin: 0 0 14px;
+        color: var(--teal-dark);
+        font-size: 0.78rem;
+        font-weight: 900;
+        text-transform: uppercase;
+      }
+
+      h1,
+      h2,
+      h3,
+      p {
+        margin-top: 0;
+        letter-spacing: 0;
+      }
+
+      h1 {
+        max-width: 850px;
+        margin-bottom: 22px;
+        font-size: clamp(2.4rem, 6vw, 5rem);
+        line-height: 0.98;
+      }
+
+      h2 {
+        font-size: clamp(1.7rem, 3vw, 2.7rem);
+        line-height: 1.08;
+      }
+
+      p,
+      li {
+        color: var(--muted);
+        line-height: 1.65;
+      }
+
+      .lead {
+        max-width: 760px;
+        font-size: 1.15rem;
+      }
+
+      .actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 28px;
+      }
+
+      a {
+        color: inherit;
+      }
+
+      .button {
+        display: inline-flex;
+        min-height: 48px;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid var(--teal);
+        border-radius: 8px;
+        padding: 12px 16px;
+        font-weight: 900;
+        text-decoration: none;
+      }
+
+      .button.primary {
+        background: var(--teal);
+        color: white;
+      }
+
+      .button.secondary {
+        background: white;
+        color: var(--teal-dark);
+      }
+
+      .board,
+      .card {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: rgba(255, 255, 255, 0.9);
+        box-shadow: 0 22px 70px rgba(15, 23, 42, 0.1);
+      }
+
+      .board {
+        padding: 28px;
+      }
+
+      .score {
+        display: grid;
+        gap: 12px;
+        margin-top: 22px;
+      }
+
+      .score div {
+        border-radius: 8px;
+        padding: 16px;
+      }
+
+      .score strong {
+        display: block;
+        margin-top: 6px;
+        font-size: 2.2rem;
+      }
+
+      .ok {
+        background: #ccfbf1;
+      }
+
+      .watch {
+        background: #fef3c7;
+      }
+
+      .risk {
+        background: #ffe4e6;
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 16px;
+        padding: 32px 0 70px;
+      }
+
+      .card {
+        padding: 22px;
+      }
+
+      .notice {
+        border-left: 4px solid var(--amber);
+        background: white;
+        padding: 16px;
+      }
+
+      @media (max-width: 850px) {
+        .hero,
+        .grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <section class="hero">
+        <div>
+          <p class="eyebrow">Projet Laravel portfolio</p>
+          <h1>ImmoRadar aide à comparer un bien immobilier sans se laisser piéger par le coup de cœur.</h1>
+          <p class="lead">
+            Crée un projet, ajoute les biens manuellement, prépare la visite, estime le coût réel mensuel, lis les
+            alertes et génère un rapport PDF d'aide à la décision.
+          </p>
+          <div class="actions">
+            <a class="button primary" href="https://github.com/QuentinVG/immoradar">Voir le dépôt GitHub</a>
+            <a class="button secondary" href="https://quentinvg.github.io/portfolio/">Retour portfolio</a>
+          </div>
+          <p class="notice" style="margin-top: 24px">
+            GitHub Pages affiche cette page de présentation statique. L'application complète est une app Laravel/PHP avec
+            authentification et base de données : elle doit être lancée en local ou déployée sur un hébergement PHP.
+          </p>
+        </div>
+
+        <aside class="board" aria-label="Aperçu des scores ImmoRadar">
+          <p class="eyebrow">Aperçu décision</p>
+          <h2>Verdict : intéressant, mais à sécuriser.</h2>
+          <div class="score">
+            <div class="ok">
+              Compatibilité
+              <strong>78/100</strong>
+            </div>
+            <div class="watch">
+              Coût réel
+              <strong>986 €/mois</strong>
+            </div>
+            <div class="risk">
+              Vigilance
+              <strong>42/100</strong>
+            </div>
+          </div>
+        </aside>
+      </section>
+
+      <section class="grid" aria-label="Fonctionnalités principales">
+        <article class="card">
+          <h3>Simple pour l'utilisateur</h3>
+          <p>Projet, biens, checklist, coût réel, verdict. Pas d'import magique, pas de scraping, pas d'IA.</p>
+        </article>
+        <article class="card">
+          <h3>Propre techniquement</h3>
+          <p>Laravel, Breeze, policies, requests, services métier, tests, Pint, Larastan, CI et Docker.</p>
+        </article>
+        <article class="card">
+          <h3>Présentable en portfolio</h3>
+          <p>README complet, seeders de démonstration, rapport PDF et audit critique documenté.</p>
+        </article>
+      </section>
+    </main>
+  </body>
+</html>

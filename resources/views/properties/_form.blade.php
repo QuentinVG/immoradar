@@ -1,8 +1,9 @@
 @csrf
 
 <div class="grid gap-6">
-    <section class="rounded-lg border border-slate-200 bg-white p-5">
-        <h2 class="text-lg font-semibold text-slate-900">Bien</h2>
+    <section class="ir-panel p-5">
+        <h2 class="text-lg font-black text-slate-950">Bien</h2>
+        <p class="mt-1 text-sm text-slate-600">Commence par les infos qui permettent déjà de comparer.</p>
         <div class="mt-4 grid gap-4 md:grid-cols-2">
             <div>
                 <x-input-label for="title" value="Titre" />
@@ -22,7 +23,7 @@
             </div>
             <div>
                 <x-input-label for="property_type" value="Type de bien" />
-                <select id="property_type" name="property_type" class="mt-1 block w-full rounded-md border-slate-300">
+                <select id="property_type" name="property_type" class="mt-1 block w-full rounded-md border-slate-300 focus:border-teal-600 focus:ring-teal-600">
                     @foreach(['appartement','maison','terrain','autre'] as $value)
                         <option value="{{ $value }}" @selected(old('property_type', $property->property_type) === $value)>{{ ucfirst($value) }}</option>
                     @endforeach
@@ -30,7 +31,7 @@
             </div>
             <div>
                 <x-input-label for="transaction_type" value="Transaction" />
-                <select id="transaction_type" name="transaction_type" class="mt-1 block w-full rounded-md border-slate-300">
+                <select id="transaction_type" name="transaction_type" class="mt-1 block w-full rounded-md border-slate-300 focus:border-teal-600 focus:ring-teal-600">
                     @foreach(['achat' => 'Achat', 'location' => 'Location'] as $value => $label)
                         <option value="{{ $value }}" @selected(old('transaction_type', $property->transaction_type) === $value)>{{ $label }}</option>
                     @endforeach
@@ -39,8 +40,8 @@
         </div>
     </section>
 
-    <section class="rounded-lg border border-slate-200 bg-white p-5">
-        <h2 class="text-lg font-semibold text-slate-900">Prix et logement</h2>
+    <section class="ir-panel p-5">
+        <h2 class="text-lg font-black text-slate-950">Prix et logement</h2>
         <div class="mt-4 grid gap-4 md:grid-cols-4">
             @foreach([
                 'price' => ['Prix', '1000'],
@@ -55,7 +56,7 @@
             @endforeach
             <div>
                 <x-input-label for="dpe" value="DPE" />
-                <select id="dpe" name="dpe" class="mt-1 block w-full rounded-md border-slate-300">
+                <select id="dpe" name="dpe" class="mt-1 block w-full rounded-md border-slate-300 focus:border-teal-600 focus:ring-teal-600">
                     @foreach(['A','B','C','D','E','F','G','inconnu'] as $dpe)
                         <option value="{{ $dpe }}" @selected(old('dpe', $property->dpe) === $dpe)>{{ $dpe }}</option>
                     @endforeach
@@ -71,7 +72,7 @@
             </div>
             <div>
                 <x-input-label for="status" value="Statut" />
-                <select id="status" name="status" class="mt-1 block w-full rounded-md border-slate-300">
+                <select id="status" name="status" class="mt-1 block w-full rounded-md border-slate-300 focus:border-teal-600 focus:ring-teal-600">
                     @foreach(['nouveau','à_analyser','à_visiter','visité','favori','offre_envisagée','offre_faite','rejeté','archivé'] as $status)
                         <option value="{{ $status }}" @selected(old('status', $property->status) === $status)>{{ str_replace('_', ' ', ucfirst($status)) }}</option>
                     @endforeach
@@ -80,16 +81,16 @@
         </div>
         <div class="mt-4 grid gap-3 md:grid-cols-3">
             @foreach(['has_garage' => 'Garage', 'has_parking' => 'Parking', 'has_balcony' => 'Balcon', 'has_garden' => 'Jardin', 'has_cellar' => 'Cave', 'has_elevator' => 'Ascenseur'] as $field => $label)
-                <label class="flex items-center gap-3 rounded-md border border-slate-200 p-3 text-sm font-medium text-slate-700">
-                    <input type="checkbox" name="{{ $field }}" value="1" class="rounded border-slate-300" @checked(old($field, $property->{$field}))>
+                <label class="flex items-center gap-3 rounded-md border border-slate-200 bg-white p-3 text-sm font-semibold text-slate-700">
+                    <input type="checkbox" name="{{ $field }}" value="1" class="rounded border-slate-300 text-teal-700 focus:ring-teal-600" @checked(old($field, $property->{$field}))>
                     {{ $label }}
                 </label>
             @endforeach
         </div>
     </section>
 
-    <section class="rounded-lg border border-slate-200 bg-white p-5">
-        <h2 class="text-lg font-semibold text-slate-900">Coût réel mensuel</h2>
+    <section class="ir-panel border-amber-200 bg-amber-50/50 p-5">
+        <h2 class="text-lg font-black text-slate-950">Coût réel mensuel</h2>
         <p class="mt-1 text-sm text-slate-600">Estimation indicative, à confirmer avec une banque, un courtier ou un professionnel.</p>
         <div class="mt-4 grid gap-4 md:grid-cols-4">
             @foreach([
@@ -111,8 +112,8 @@
         </div>
     </section>
 
-    <section class="rounded-lg border border-slate-200 bg-white p-5">
-        <h2 class="text-lg font-semibold text-slate-900">Ressenti et notes</h2>
+    <section class="ir-panel p-5">
+        <h2 class="text-lg font-black text-slate-950">Ressenti et notes</h2>
         <div class="mt-4 grid gap-4 md:grid-cols-3">
             <div>
                 <x-input-label for="hot_feeling_score" value="Ressenti à chaud /10" />
@@ -130,7 +131,7 @@
         @foreach(['description' => 'Description', 'rational_notes' => 'Notes rationnelles', 'emotional_notes' => 'Notes ressenti', 'risk_notes' => 'Risques'] as $field => $label)
             <div class="mt-4">
                 <x-input-label :for="$field" :value="$label" />
-                <textarea id="{{ $field }}" name="{{ $field }}" rows="3" class="mt-1 block w-full rounded-md border-slate-300">{{ old($field, $property->{$field}) }}</textarea>
+                <textarea id="{{ $field }}" name="{{ $field }}" rows="3" class="mt-1 block w-full rounded-md border-slate-300 focus:border-teal-600 focus:ring-teal-600">{{ old($field, $property->{$field}) }}</textarea>
             </div>
         @endforeach
     </section>
@@ -142,5 +143,5 @@
 
 <div class="mt-6 flex flex-wrap gap-3">
     <x-primary-button>{{ $submitLabel }}</x-primary-button>
-    <a href="{{ route('projects.properties.index', $project) }}" class="inline-flex items-center rounded-md border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700">Annuler</a>
+    <a href="{{ route('projects.properties.index', $project) }}" class="ir-action-secondary">Annuler</a>
 </div>

@@ -149,6 +149,34 @@ Email: demo@immoradar.test
 Mot de passe: password
 ```
 
+## Inscription Et Anti-Spam
+
+L'inscription peut être protégée par un code d'accès privé :
+
+```env
+REGISTRATION_ACCESS_CODE=un-code-prive
+```
+
+Quand cette variable est définie, le formulaire d'inscription demande le code. La V1 ajoute aussi :
+
+- rate limit sur la route `POST /register` ;
+- honeypot invisible pour bloquer les bots basiques ;
+- délai minimum avant soumission du formulaire.
+
+Ce choix est volontairement simple : pas de CAPTCHA externe, pas de service tiers, pas de friction inutile pour une instance personnelle.
+
+## GitHub Pages
+
+GitHub Pages ne peut pas héberger directement l'application Laravel complète, car elle nécessite PHP, une base de données, des sessions et du stockage.
+
+Le dossier `docs/` contient donc une page statique de présentation publiable ici :
+
+```text
+https://quentinvg.github.io/immoradar/
+```
+
+Pour utiliser l'application complète, lance-la localement ou déploie-la sur un hébergement compatible Laravel.
+
 Le seeder crée un projet :
 
 ```text

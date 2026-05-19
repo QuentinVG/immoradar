@@ -1,3 +1,40 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+    body {
+        background:
+            linear-gradient(180deg, #f8f6ef 0%, #eef6f3 42%, #f8fafc 100%);
+    }
+}
+
+@layer components {
+    .ir-panel {
+        @apply rounded-lg border border-slate-200/80 bg-white/90 shadow-sm shadow-slate-200/60;
+    }
+
+    .ir-soft-panel {
+        @apply rounded-lg border border-white/70 bg-white/65 shadow-sm shadow-slate-200/50 backdrop-blur;
+    }
+
+    .ir-pill {
+        @apply inline-flex items-center rounded-md border px-2.5 py-1 text-xs font-black uppercase tracking-normal;
+    }
+
+    .ir-action {
+        @apply inline-flex min-h-10 items-center justify-center rounded-md px-4 py-2 text-sm font-black transition hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2;
+    }
+
+    .ir-action-primary {
+        @apply ir-action border border-teal-700 bg-teal-700 text-white shadow-sm shadow-teal-900/15 hover:bg-teal-800;
+    }
+
+    .ir-action-secondary {
+        @apply ir-action border border-slate-300 bg-white/80 text-slate-800 hover:border-teal-300 hover:text-teal-800;
+    }
+
+    .ir-action-warm {
+        @apply ir-action border border-amber-500 bg-amber-400 text-slate-950 shadow-sm shadow-amber-900/10 hover:bg-amber-300;
+    }
+}

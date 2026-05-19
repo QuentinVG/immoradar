@@ -11,6 +11,7 @@ Statut : validé.
 - Biens immobiliers CRUD avec photo principale.
 - Calcul du coût réel mensuel.
 - Checklist de visite mobile-friendly.
+- Inscription protégée par code d'accès optionnel, honeypot et rate limit.
 - Scores expliqués : compatibilité, solidité, projection, vigilance.
 - Alertes automatiques.
 - Verdict automatique.
@@ -36,6 +37,8 @@ Statut : validé pour une V1.
 - La fiche bien commence par le verdict, puis le coût, les scores, les alertes et les détails.
 - Le dashboard projet met en avant le meilleur bien, les risques et les informations à compléter.
 - Le mode visite utilise de gros choix rapides adaptés mobile.
+- Le mode visite rappelle clairement que les réponses sont modifiables puis enregistrées avec le bouton en bas.
+- L'interface a été retravaillée pour être moins administrative : couleurs par usage, actions prioritaires, cartes plus lisibles.
 - Le vocabulaire reste simple et non marketing.
 
 Limite assumée : la vue duel avancée n'est pas développée en V1. Elle est documentée en roadmap.
@@ -51,6 +54,9 @@ Statut : validé.
 - Stockage local Laravel via disque public.
 - CSRF géré par Blade/Laravel.
 - Test d'accès interdit à un projet d'un autre utilisateur.
+- Rate limit dédié sur `POST /register`.
+- Code d'accès privé possible via `REGISTRATION_ACCESS_CODE`.
+- Honeypot invisible et délai minimum de soumission sur l'inscription.
 
 ## Audit Technique
 
@@ -72,6 +78,8 @@ Corrections effectuées pendant audit :
 - `composer.lock` synchronisé ;
 - `.env.example` aligné avec ImmoRadar et MySQL ;
 - lien storage public généré localement.
+- refonte UI des pages clés : login, register, projets, dashboard projet, biens, fiche bien, comparaison, mode visite.
+- page statique GitHub Pages ajoutée dans `docs/index.html`.
 
 ## Audit Tests
 
@@ -79,7 +87,7 @@ Statut : validé.
 
 Résultat final :
 
-- PHPUnit : 34 tests passés, 86 assertions.
+- PHPUnit : 36 tests passés, 92 assertions.
 - Pint : passé.
 - PHPStan/Larastan : 0 erreur.
 - Build Vite : passé.
@@ -95,6 +103,7 @@ Statut : validé.
 - Docker et GitHub Actions présents.
 - Roadmap documentée sans surcharger la V1.
 - Produit compréhensible rapidement par une personne qui découvre le repo.
+- Page GitHub Pages statique prévue pour présenter ImmoRadar : `https://quentinvg.github.io/immoradar/`.
 
 ## Réaudit
 
@@ -108,3 +117,4 @@ Limites restantes assumées :
 - pas de galerie photo ;
 - pas de mode duel avancé ;
 - Docker non exécuté localement sur cette machine, car Docker n'est pas installé.
+- GitHub Pages ne peut pas héberger l'application Laravel complète ; la page `docs/` sert de vitrine statique.
