@@ -46,8 +46,8 @@
                                     <p class="mt-1 text-sm text-slate-500">{{ $question->help_text }}</p>
                                 @endif
                                 <div class="mt-3 grid grid-cols-2 gap-2">
-                                    @foreach(['yes' => 'Oui', 'no' => 'Non', 'unknown' => 'À vérifier', 'not_applicable' => 'Non concerné'] as $value => $label)
-                                        <label class="flex min-h-12 cursor-pointer items-center justify-center rounded-md border px-3 py-2 text-center text-sm font-black transition {{ ($current?->answer ?? 'unknown') === $value ? ($value === 'no' ? 'border-rose-500 bg-rose-50 text-rose-900' : ($value === 'yes' ? 'border-teal-600 bg-teal-50 text-teal-900' : 'border-amber-500 bg-amber-50 text-amber-950')) : 'border-slate-200 bg-white text-slate-700 hover:border-teal-300' }}">
+                                    @foreach(['yes' => ['Oui', 'visit-choice-yes'], 'no' => ['Non', 'visit-choice-no'], 'unknown' => ['À vérifier', 'visit-choice-unknown'], 'not_applicable' => ['Non concerné', 'visit-choice-na']] as $value => [$label, $choiceClass])
+                                        <label class="visit-choice {{ $choiceClass }}">
                                             <input class="sr-only" type="radio" name="answers[{{ $question->id }}][answer]" value="{{ $value }}" @checked(($current?->answer ?? 'unknown') === $value)>
                                             {{ $label }}
                                         </label>
