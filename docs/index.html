@@ -3,21 +3,40 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>ImmoRadar - Assistant de décision immobilière</title>
+    <title>ImmoRadar - Checklist visite et comparaison immobilière</title>
     <meta
       name="description"
-      content="ImmoRadar aide à comparer des biens immobiliers, préparer les visites, estimer le coût réel mensuel et décider plus rationnellement."
+      content="ImmoRadar aide à comparer des biens immobiliers, préparer une checklist de visite, estimer le coût réel mensuel et repérer les alertes avant une offre."
     />
+    <link rel="canonical" href="https://quentinvg.github.io/immoradar/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="fr_FR" />
+    <meta property="og:title" content="ImmoRadar - Assistant de visite immobilière" />
+    <meta
+      property="og:description"
+      content="Checklist visite, coût réel mensuel, alertes et comparaison de biens pour décider plus calmement."
+    />
+    <meta property="og:url" content="https://quentinvg.github.io/immoradar/" />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "ImmoRadar",
+        "applicationCategory": "FinanceApplication",
+        "operatingSystem": "Web",
+        "description": "Assistant de visite immobilière pour comparer des biens, estimer le coût réel mensuel et repérer les alertes avant une offre."
+      }
+    </script>
     <style>
       :root {
-        --ink: #101828;
-        --muted: #596579;
-        --line: #d9e2df;
+        --ink: #090d1f;
+        --muted: #4d5c73;
+        --line: #d9e4e1;
         --teal: #0f766e;
         --teal-dark: #134e4a;
-        --amber: #fbbf24;
-        --rose: #be123c;
-        --bg: #f8f6ef;
+        --amber: #92400e;
+        --rose: #9f1239;
+        --bg: #f3f7f3;
         --surface: #ffffff;
       }
 
@@ -28,30 +47,96 @@
       body {
         margin: 0;
         color: var(--ink);
-        background: linear-gradient(180deg, var(--bg), #edf7f4 46%, #f8fafc);
+        background: #f8fafc;
         font-family:
           Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       }
 
+      a {
+        color: inherit;
+      }
+
+      header {
+        border-bottom: 1px solid var(--line);
+        background: white;
+      }
+
+      .bar,
       main {
-        width: min(1120px, calc(100% - 32px));
+        width: min(1216px, calc(100% - 32px));
         margin: 0 auto;
+      }
+
+      .bar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        padding: 16px 0;
+        font-weight: 900;
+      }
+
+      .brand {
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+        text-decoration: none;
+      }
+
+      .logo {
+        display: grid;
+        width: 40px;
+        height: 40px;
+        place-items: center;
+        border-radius: 8px;
+        background: var(--teal);
+        color: white;
+      }
+
+      .actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+      }
+
+      .button {
+        display: inline-flex;
+        min-height: 42px;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid #c9d6df;
+        border-radius: 8px;
+        padding: 10px 14px;
+        background: white;
+        font-weight: 900;
+        text-decoration: none;
+      }
+
+      .button.primary {
+        border-color: var(--teal);
+        background: var(--teal);
+        color: white;
       }
 
       .hero {
         display: grid;
-        min-height: 88vh;
-        grid-template-columns: minmax(0, 1.05fr) minmax(320px, 0.75fr);
-        gap: 48px;
+        grid-template-columns: minmax(0, 1fr) minmax(320px, 0.95fr);
+        gap: 40px;
         align-items: center;
-        padding: 56px 0;
+        padding: 64px 0;
+      }
+
+      .hero-wrap {
+        background: var(--bg);
+        border-bottom: 1px solid var(--line);
       }
 
       .eyebrow {
         margin: 0 0 14px;
-        color: var(--teal-dark);
+        color: var(--teal);
         font-size: 0.78rem;
         font-weight: 900;
+        letter-spacing: 0;
         text-transform: uppercase;
       }
 
@@ -64,14 +149,15 @@
       }
 
       h1 {
-        max-width: 850px;
-        margin-bottom: 22px;
-        font-size: clamp(2.4rem, 6vw, 5rem);
-        line-height: 0.98;
+        max-width: 760px;
+        margin-bottom: 24px;
+        font-size: clamp(2.35rem, 5.8vw, 4.9rem);
+        line-height: 1.02;
       }
 
       h2 {
-        font-size: clamp(1.7rem, 3vw, 2.7rem);
+        margin-bottom: 16px;
+        font-size: clamp(1.8rem, 3vw, 2.4rem);
         line-height: 1.08;
       }
 
@@ -82,161 +168,207 @@
       }
 
       .lead {
-        max-width: 760px;
-        font-size: 1.15rem;
+        max-width: 720px;
+        font-size: 1.12rem;
       }
 
-      .actions {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 12px;
-        margin-top: 28px;
-      }
-
-      a {
-        color: inherit;
-      }
-
-      .button {
-        display: inline-flex;
-        min-height: 48px;
-        align-items: center;
-        justify-content: center;
-        border: 1px solid var(--teal);
-        border-radius: 8px;
-        padding: 12px 16px;
-        font-weight: 900;
-        text-decoration: none;
-      }
-
-      .button.primary {
-        background: var(--teal);
-        color: white;
-      }
-
-      .button.secondary {
-        background: white;
-        color: var(--teal-dark);
-      }
-
-      .board,
-      .card {
+      .panel,
+      .card,
+      .metric {
         border: 1px solid var(--line);
         border-radius: 8px;
-        background: rgba(255, 255, 255, 0.9);
-        box-shadow: 0 22px 70px rgba(15, 23, 42, 0.1);
+        background: var(--surface);
       }
 
-      .board {
-        padding: 28px;
+      .panel {
+        padding: 22px;
+        box-shadow: 0 16px 45px rgba(15, 23, 42, 0.08);
       }
 
-      .score {
+      .panel-head {
+        display: flex;
+        justify-content: space-between;
+        gap: 16px;
+        border-bottom: 1px solid var(--line);
+        padding-bottom: 16px;
+      }
+
+      .badge {
+        align-self: flex-start;
+        border-radius: 999px;
+        background: #fef3c7;
+        padding: 6px 12px;
+        color: var(--amber);
+        font-weight: 900;
+      }
+
+      .metrics {
         display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
         gap: 12px;
-        margin-top: 22px;
+        margin-top: 20px;
       }
 
-      .score div {
-        border-radius: 8px;
+      .metric {
         padding: 16px;
       }
 
-      .score strong {
+      .metric span {
         display: block;
-        margin-top: 6px;
-        font-size: 2.2rem;
+        color: var(--muted);
+        font-size: 0.76rem;
+        font-weight: 900;
+        text-transform: uppercase;
       }
 
-      .ok {
-        background: #ccfbf1;
+      .metric strong {
+        display: block;
+        margin-top: 8px;
+        font-size: 2rem;
       }
 
-      .watch {
-        background: #fef3c7;
+      .metric.ok {
+        background: #ecfdf5;
       }
 
-      .risk {
-        background: #ffe4e6;
+      .metric.risk {
+        background: #fff1f2;
+      }
+
+      .next {
+        margin-top: 20px;
+        border: 1px solid #f5d565;
+        border-radius: 8px;
+        background: #fffbeb;
+        padding: 16px;
       }
 
       .grid {
         display: grid;
         grid-template-columns: repeat(3, minmax(0, 1fr));
         gap: 16px;
-        padding: 32px 0 70px;
+        padding: 56px 0;
       }
 
       .card {
         padding: 22px;
       }
 
-      .notice {
-        border-left: 4px solid var(--amber);
+      .note {
+        margin-top: 24px;
+        border-left: 4px solid #f59e0b;
         background: white;
         padding: 16px;
       }
 
-      @media (max-width: 850px) {
+      @media (max-width: 860px) {
         .hero,
-        .grid {
+        .grid,
+        .metrics {
           grid-template-columns: 1fr;
+        }
+
+        .hero {
+          padding: 44px 0;
+        }
+
+        .bar {
+          align-items: flex-start;
+        }
+      }
+
+      @media (max-width: 520px) {
+        .hide-small {
+          display: none;
         }
       }
     </style>
   </head>
   <body>
-    <main>
-      <section class="hero">
-        <div>
-          <p class="eyebrow">Projet Laravel portfolio</p>
-          <h1>ImmoRadar aide à comparer un bien immobilier sans se laisser piéger par le coup de cœur.</h1>
-          <p class="lead">
-            Crée un projet, ajoute les biens manuellement, prépare la visite, estime le coût réel mensuel, lis les
-            alertes et génère un rapport PDF d'aide à la décision.
-          </p>
-          <div class="actions">
-            <a class="button primary" href="https://github.com/QuentinVG/immoradar">Voir le dépôt GitHub</a>
-            <a class="button secondary" href="https://quentinvg.github.io/portfolio/">Retour portfolio</a>
-          </div>
-          <p class="notice" style="margin-top: 24px">
-            GitHub Pages affiche cette page de présentation statique. L'application complète est une app Laravel/PHP avec
-            authentification et base de données : elle doit être lancée en local ou déployée sur un hébergement PHP.
-          </p>
+    <header>
+      <div class="bar">
+        <a class="brand" href="https://quentinvg.github.io/immoradar/">
+          <span class="logo">IR</span>
+          <span>ImmoRadar</span>
+        </a>
+        <div class="actions">
+          <a class="button" href="https://github.com/QuentinVG/immoradar">GitHub</a>
+          <a class="button primary hide-small" href="https://quentinvg.github.io/portfolio/">Portfolio</a>
         </div>
+      </div>
+    </header>
 
-        <aside class="board" aria-label="Aperçu des informations affichées par ImmoRadar">
-          <p class="eyebrow">Ce que l'app rend lisible</p>
-          <h2>Un verdict, un coût indicatif et les vrais points à vérifier.</h2>
-          <div class="score">
-            <div class="ok">
-              Verdict expliqué
-              <strong>Pourquoi ce bien ressort</strong>
+    <div class="hero-wrap">
+      <main>
+        <section class="hero">
+          <div>
+            <p class="eyebrow">Projet Laravel portfolio</p>
+            <h1>Visite un bien sans te laisser embarquer par le coup de cœur.</h1>
+            <p class="lead">
+              ImmoRadar aide à comparer des biens immobiliers, préparer une checklist de visite, estimer le coût réel
+              mensuel et repérer les alertes avant une offre.
+            </p>
+            <div class="actions">
+              <a class="button primary" href="https://github.com/QuentinVG/immoradar">Voir le dépôt GitHub</a>
+              <a class="button" href="https://quentinvg.github.io/portfolio/">Retour portfolio</a>
             </div>
-            <div class="watch">
-              Coût réel mensuel
-              <strong>Estimation détaillée</strong>
-            </div>
-            <div class="risk">
-              Alertes
-              <strong>Points à sécuriser</strong>
-            </div>
+            <p class="note">
+              GitHub Pages affiche cette page statique. L'application complète est une app Laravel avec auth, base de
+              données, sessions et PDF : elle doit être lancée localement ou déployée sur un hébergement compatible PHP.
+            </p>
           </div>
-        </aside>
-      </section>
 
+          <aside class="panel" aria-label="Aperçu des informations affichées par ImmoRadar">
+            <div class="panel-head">
+              <div>
+                <p class="eyebrow">Exemple de synthèse</p>
+                <h2>Maison Montoison</h2>
+              </div>
+              <span class="badge">à sécuriser</span>
+            </div>
+            <div class="metrics">
+              <div class="metric ok">
+                <span>Compatibilité</span>
+                <strong>78</strong>
+                <p>bon compromis</p>
+              </div>
+              <div class="metric">
+                <span>Coût réel</span>
+                <strong>986 €</strong>
+                <p>par mois estimé</p>
+              </div>
+              <div class="metric risk">
+                <span>Vigilance</span>
+                <strong>42</strong>
+                <p>à vérifier</p>
+              </div>
+            </div>
+            <div class="next">
+              <strong>Avant de décider</strong>
+              <ul>
+                <li>Confirmer les charges et la taxe foncière.</li>
+                <li>Revoir le ressenti à froid après la visite.</li>
+                <li>Comparer avec au moins deux alternatives.</li>
+              </ul>
+            </div>
+          </aside>
+        </section>
+      </main>
+    </div>
+
+    <main>
       <section class="grid" aria-label="Fonctionnalités principales">
         <article class="card">
           <h3>Simple pour l'utilisateur</h3>
           <p>Projet, biens, checklist, coût réel, verdict. Pas d'import magique, pas de scraping, pas d'IA.</p>
         </article>
         <article class="card">
-          <h3>Propre techniquement</h3>
+          <h3>Solide techniquement</h3>
           <p>Laravel, Breeze, policies, requests, services métier, tests, Pint, Larastan, CI et Docker.</p>
         </article>
         <article class="card">
           <h3>Présentable en portfolio</h3>
-          <p>README complet, seeders de démonstration, rapport PDF et audit critique documenté.</p>
+          <p>README complet, seeders de démonstration, rapport PDF, page SEO publique et audit documenté.</p>
         </article>
       </section>
     </main>
