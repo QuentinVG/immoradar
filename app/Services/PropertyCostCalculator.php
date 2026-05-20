@@ -16,6 +16,9 @@ class PropertyCostCalculator
         $missing = [];
         $price = $this->money($property->price);
         $workCost = $this->money($property->estimated_work_cost);
+        $agencyFees = $this->money($property->agency_fees);
+        $bankFees = $this->money($property->bank_fees);
+        $loanGuaranteeFees = $this->money($property->loan_guarantee_fees);
         $downPayment = $this->money($property->down_payment);
         $notaryFees = $this->estimatedNotaryFees($property);
 
@@ -23,7 +26,8 @@ class PropertyCostCalculator
             $missing[] = 'prix';
         }
 
-        $loanAmount = max(0, $price + $notaryFees + $workCost - $downPayment);
+        $purchaseFees = $agencyFees + $bankFees + $loanGuaranteeFees;
+        $loanAmount = max(0, $price + $notaryFees + $workCost + $purchaseFees - $downPayment);
         $loanPayment = 0.0;
 
         if ($property->transaction_type === 'achat') {
@@ -61,7 +65,8 @@ class PropertyCostCalculator
         return [
             'estimated_notary_fees' => round($notaryFees, 2),
             'loan_amount' => round($loanAmount, 2),
-            'total_project_cost' => round($price + $notaryFees + $workCost, 2),
+            'purchase_fees' => round($purchaseFees, 2),
+            'total_project_cost' => round($price + $notaryFees + $workCost + $purchaseFees, 2),
             'estimated_monthly_loan_payment' => round($loanPayment, 2),
             'real_monthly_cost' => $realMonthlyCost,
             'details' => $details,

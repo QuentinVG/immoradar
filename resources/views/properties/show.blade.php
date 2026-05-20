@@ -110,6 +110,14 @@
                 <p class="max-w-md rounded-md border border-amber-200 bg-amber-50 p-3 text-sm font-semibold leading-6 text-amber-950">{{ $cost['notice'] }}</p>
             </div>
             <dl class="mt-6 grid gap-3 md:grid-cols-4">
+                <div class="rounded-md border border-slate-100 bg-slate-50 p-3">
+                    <dt class="text-xs uppercase text-slate-500">Coût total projet</dt>
+                    <dd class="mt-1 font-semibold text-slate-900">{{ number_format($cost['total_project_cost'], 0, ',', ' ') }} €</dd>
+                </div>
+                <div class="rounded-md border border-slate-100 bg-slate-50 p-3">
+                    <dt class="text-xs uppercase text-slate-500">Frais achat hors notaire</dt>
+                    <dd class="mt-1 font-semibold text-slate-900">{{ number_format($cost['purchase_fees'], 0, ',', ' ') }} €</dd>
+                </div>
                 @foreach($cost['details'] as $label => $amount)
                 <div class="rounded-md border border-slate-100 bg-slate-50 p-3">
                         <dt class="text-xs uppercase text-slate-500">{{ str_replace('_', ' ', $label) }}</dt>
@@ -173,42 +181,70 @@
         </section>
 
         <section class="ir-panel p-6">
-            <div class="flex flex-wrap items-start justify-between gap-4">
-                <div>
-                    <p class="text-sm font-black uppercase text-teal-700">Revue avant offre</p>
-                    <h2 class="mt-1 text-2xl font-black text-slate-950">Documents et points à confirmer</h2>
-                    <p class="mt-2 max-w-3xl text-sm leading-6 text-slate-600">Cette liste évite de décider uniquement sur la visite. Elle reprend les documents qui peuvent changer le budget, les travaux ou le risque juridique.</p>
+            <form method="POST" action="{{ route('projects.properties.due-diligence.update', [$project, $property]) }}">
+                @csrf
+                @method('PATCH')
+                <div class="flex flex-wrap items-start justify-between gap-4">
+                    <div>
+                        <p class="text-sm font-black uppercase text-teal-700">Revue avant offre</p>
+                        <h2 class="mt-1 text-2xl font-black text-slate-950">Documents et points à confirmer</h2>
+                        <p class="mt-2 max-w-3xl text-sm leading-6 text-slate-600">Cette liste évite de décider uniquement sur la visite. Elle reprend les documents qui peuvent changer le budget, les travaux ou le risque juridique.</p>
+                    </div>
+                    <x-primary-button>Enregistrer la revue</x-primary-button>
                 </div>
-                <a href="{{ route('projects.properties.visit', [$project, $property]) }}" class="ir-action-secondary">Mettre à jour</a>
-            </div>
-            <div class="mt-5 grid gap-3 md:grid-cols-2">
+                <div class="mt-5 grid gap-3 md:grid-cols-2">
                 @foreach($dueDiligence as $item)
                     @php
+                        $index = $loop->index;
                         $statusClasses = [
-                            'confirmed' => 'border-teal-200 bg-teal-50 text-teal-900',
+                            'read' => 'border-teal-200 bg-teal-50 text-teal-900',
+                            'received' => 'border-sky-200 bg-sky-50 text-sky-900',
+                            'requested' => 'border-amber-200 bg-amber-50 text-amber-950',
                             'missing' => 'border-red-200 bg-red-50 text-red-900',
                             'unknown' => 'border-amber-200 bg-amber-50 text-amber-950',
                             'not_applicable' => 'border-slate-200 bg-slate-50 text-slate-700',
                         ];
                         $statusLabels = [
-                            'confirmed' => 'confirmé',
+                            'read' => 'lu et OK',
+                            'received' => 'reçu',
+                            'requested' => 'demandé',
                             'missing' => 'manquant',
                             'unknown' => 'à vérifier',
                             'not_applicable' => 'non concerné',
                         ];
                     @endphp
                     <article class="rounded-lg border p-4 {{ $statusClasses[$item['status']] ?? 'border-slate-200 bg-slate-50 text-slate-700' }}">
+                        <input type="hidden" name="items[{{ $index }}][key]" value="{{ $item['key'] }}">
                         <div class="flex items-start justify-between gap-3">
                             <h3 class="font-black text-slate-950">{{ $item['label'] }}</h3>
                             <span class="rounded-full bg-white/80 px-3 py-1 text-xs font-black">{{ $statusLabels[$item['status']] ?? $item['status'] }}</span>
                         </div>
                         <p class="mt-2 text-sm leading-6">{{ $item['why'] }}</p>
-                        @if($item['status'] !== 'confirmed' && $item['status'] !== 'not_applicable')
+                        @if($item['status'] !== 'read' && $item['status'] !== 'not_applicable')
                             <p class="mt-3 text-sm font-semibold">{{ $item['action'] }}</p>
                         @endif
+                        <div class="mt-4 grid gap-3 md:grid-cols-[0.8fr_1fr]">
+                            <div>
+                                <label for="due_status_{{ $item['key'] }}" class="text-xs font-black uppercase text-slate-500">Statut</label>
+                                <select id="due_status_{{ $item['key'] }}" name="items[{{ $index }}][status]" class="mt-1 block w-full rounded-md border-slate-300 text-sm focus:border-teal-600 focus:ring-teal-600">
+                                    @foreach(['unknown' => 'À vérifier', 'requested' => 'Demandé', 'received' => 'Reçu', 'read' => 'Lu et OK', 'missing' => 'Manquant', 'not_applicable' => 'Non concerné'] as $value => $label)
+                                        <option value="{{ $value }}" @selected($item['status'] === $value)>{{ $label }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <label class="mt-6 flex items-center gap-2 text-sm font-semibold text-slate-700">
+                                <input type="checkbox" name="items[{{ $index }}][is_blocking]" value="1" class="rounded border-slate-300 text-teal-700 focus:ring-teal-600" @checked($item['is_blocking'])>
+                                Bloquant pour offre
+                            </label>
+                        </div>
+                        <div class="mt-3">
+                            <label for="due_note_{{ $item['key'] }}" class="text-xs font-black uppercase text-slate-500">Note</label>
+                            <textarea id="due_note_{{ $item['key'] }}" name="items[{{ $index }}][note]" rows="2" class="mt-1 block w-full rounded-md border-slate-300 text-sm focus:border-teal-600 focus:ring-teal-600" placeholder="Ex : reçu le 12/06, travaux toiture votés à relire.">{{ $item['note'] }}</textarea>
+                        </div>
                     </article>
                 @endforeach
-            </div>
+                </div>
+            </form>
         </section>
 
         <section class="grid gap-4 lg:grid-cols-2">

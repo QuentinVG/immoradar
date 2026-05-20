@@ -100,4 +100,30 @@ class SecurityAndReportsTest extends TestCase
             'comment' => 'calme pendant la visite',
         ]);
     }
+
+    public function test_user_can_update_property_due_diligence_review(): void
+    {
+        $property = Property::factory()->create();
+
+        $this->actingAs($property->project->user)
+            ->patch(route('projects.properties.due-diligence.update', [$property->project, $property]), [
+                'items' => [
+                    [
+                        'key' => 'diagnostics',
+                        'status' => 'read',
+                        'is_blocking' => false,
+                        'note' => 'DDT reçu et relu.',
+                    ],
+                ],
+            ])
+            ->assertRedirect(route('projects.properties.show', [$property->project, $property]));
+
+        $this->assertDatabaseHas('property_due_diligence_items', [
+            'property_id' => $property->id,
+            'key' => 'diagnostics',
+            'status' => 'read',
+            'is_blocking' => false,
+            'note' => 'DDT reçu et relu.',
+        ]);
+    }
 }

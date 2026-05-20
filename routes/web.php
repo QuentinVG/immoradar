@@ -4,6 +4,7 @@ use App\Http\Controllers\CompareController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\PropertyController;
+use App\Http\Controllers\PropertyDueDiligenceController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\VisitChecklistController;
 use Illuminate\Support\Facades\Auth;
@@ -127,6 +128,7 @@ Route::middleware('auth')->group(function () {
     Route::get('projects/{project}/properties/{property}/visit', [VisitChecklistController::class, 'edit'])->name('projects.properties.visit');
     Route::post('projects/{project}/properties/{property}/visit', [VisitChecklistController::class, 'update'])->name('projects.properties.visit.update');
     Route::post('projects/{project}/properties/{property}/visit/answer', [VisitChecklistController::class, 'updateAnswer'])->name('projects.properties.visit.answer');
+    Route::patch('projects/{project}/properties/{property}/due-diligence', [PropertyDueDiligenceController::class, 'update'])->name('projects.properties.due-diligence.update');
     Route::get('projects/{project}/properties/{property}/report', [ReportController::class, 'property'])->name('projects.properties.report');
 });
 

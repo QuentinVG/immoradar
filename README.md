@@ -55,6 +55,8 @@ Les calculs financiers sont volontairement affichés comme indicatifs.
 - Rapport PDF par bien.
 - Rapport PDF comparatif du projet.
 - Données de démonstration réalistes.
+- Revue avant offre éditable : documents demandés, reçus, lus, bloquants ou non concernés.
+- Décision "Prêt pour offre ?" avec bloquants, niveau de preuve et conditions à prévoir.
 - Connexion démo en un clic, avec compte de démonstration en lecture seule.
 - Page publique SEO avec meta description, canonical, JSON-LD, sitemap et robots.txt.
 - Guides publics SEO : checklist visite, coût réel mensuel, comparaison de biens, documents d'achat.
@@ -308,6 +310,7 @@ composer quality
 - Pas de carte ni calcul de trajet en temps réel.
 - Pas de galerie photo.
 - Pas de partage public ou lecture seule.
+- Pas encore d'upload de documents PDF : le suivi documentaire est volontairement textuel pour éviter un stockage fragile avant déploiement stable.
 - Les critères de scoring sont simples, lisibles et testables plutôt que prétendument exhaustifs.
 
 ## Roadmap

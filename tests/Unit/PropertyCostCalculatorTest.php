@@ -24,6 +24,9 @@ class PropertyCostCalculatorTest extends TestCase
             'transaction_type' => 'achat',
             'price' => 150000,
             'estimated_work_cost' => 6000,
+            'agency_fees' => 4000,
+            'bank_fees' => 900,
+            'loan_guarantee_fees' => 1800,
             'down_payment' => 20000,
             'loan_rate' => 3.6,
             'loan_duration_years' => 20,
@@ -37,6 +40,8 @@ class PropertyCostCalculatorTest extends TestCase
         $result = (new PropertyCostCalculator)->calculate($property);
 
         $this->assertSame(11250.0, $result['estimated_notary_fees']);
+        $this->assertSame(6700.0, $result['purchase_fees']);
+        $this->assertSame(173950.0, $result['total_project_cost']);
         $this->assertGreaterThan(1100, $result['real_monthly_cost']);
         $this->assertFalse($result['is_partial']);
     }

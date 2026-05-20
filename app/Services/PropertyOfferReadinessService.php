@@ -133,8 +133,6 @@ class PropertyOfferReadinessService
     }
 
     /**
-     * @param  Collection<int,array<string,string>>  $alerts
-     * @param  Collection<int,array{key:string,label:string,why:string,status:string,action:string}>  $dueDiligence
      * @return array<int,string>
      */
     private function conditions(Property $property, Collection $alerts, Collection $dueDiligence): array

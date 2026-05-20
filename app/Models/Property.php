@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property-read Project|null $project
  * @property-read Collection<int, PropertyAlert> $alerts
  * @property-read Collection<int, PropertyChecklistAnswer> $checklistAnswers
+ * @property-read Collection<int, PropertyDueDiligenceItem> $dueDiligenceItems
  * @property-read float|null $price_per_square_meter
  */
 class Property extends Model
@@ -42,6 +43,9 @@ class Property extends Model
         'estimated_home_insurance_monthly',
         'estimated_loan_insurance_monthly',
         'estimated_work_cost',
+        'agency_fees',
+        'bank_fees',
+        'loan_guarantee_fees',
         'down_payment',
         'loan_rate',
         'loan_duration_years',
@@ -75,6 +79,9 @@ class Property extends Model
             'estimated_home_insurance_monthly' => 'decimal:2',
             'estimated_loan_insurance_monthly' => 'decimal:2',
             'estimated_work_cost' => 'decimal:2',
+            'agency_fees' => 'decimal:2',
+            'bank_fees' => 'decimal:2',
+            'loan_guarantee_fees' => 'decimal:2',
             'down_payment' => 'decimal:2',
             'loan_rate' => 'decimal:2',
             'loan_duration_years' => 'integer',
@@ -113,6 +120,14 @@ class Property extends Model
     public function alerts(): HasMany
     {
         return $this->hasMany(PropertyAlert::class);
+    }
+
+    /**
+     * @return HasMany<PropertyDueDiligenceItem, $this>
+     */
+    public function dueDiligenceItems(): HasMany
+    {
+        return $this->hasMany(PropertyDueDiligenceItem::class);
     }
 
     public function getPricePerSquareMeterAttribute(): ?float
