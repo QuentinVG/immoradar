@@ -57,7 +57,7 @@ Les calculs financiers sont volontairement affichés comme indicatifs.
 - Données de démonstration réalistes.
 - Connexion démo en un clic, avec compte de démonstration en lecture seule.
 - Page publique SEO avec meta description, canonical, JSON-LD, sitemap et robots.txt.
-- Guides publics SEO : checklist visite, coût réel mensuel, comparaison de biens.
+- Guides publics SEO : checklist visite, coût réel mensuel, comparaison de biens, documents d'achat.
 - Dockerfile cloud-ready et blueprint Render pour une démo gratuite.
 
 ## Stack Technique
@@ -186,6 +186,7 @@ La V2 ajoute une vraie page publique sur `/`, au lieu de rediriger directement v
   - `/guides/checklist-visite-immobiliere`
   - `/guides/cout-reel-mensuel-immobilier`
   - `/guides/comparer-biens-immobiliers`
+  - `/guides/documents-achat-immobilier`
 
 Les pages privées de l'application restent derrière authentification et les layouts app/auth incluent `noindex, nofollow`. L'objectif est clair : indexer la présentation publique, pas les données utilisateur.
 

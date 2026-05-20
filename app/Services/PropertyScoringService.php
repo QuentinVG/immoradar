@@ -171,6 +171,9 @@ class PropertyScoringService
         if (in_array($property->dpe, ['F', 'G'], true)) {
             $score += 18;
             $reasons[] = '- DPE mauvais';
+        } elseif ($property->transaction_type === 'achat' && $property->property_type === 'maison' && $property->dpe === 'E') {
+            $score += 8;
+            $reasons[] = '- DPE E : audit et travaux à clarifier';
         } elseif ($property->dpe === 'inconnu') {
             $score += 10;
             $reasons[] = '- DPE inconnu';
@@ -203,6 +206,15 @@ class PropertyScoringService
         if ($riskyAnswers > 0) {
             $score += min(20, $riskyAnswers * 3);
             $reasons[] = '- points de visite à vérifier';
+        }
+
+        $documentAnswersToConfirm = $property->checklistAnswers
+            ->filter(fn ($answer): bool => $answer->question?->category === 'Documents' && in_array($answer->answer, ['no', 'unknown'], true))
+            ->count();
+
+        if ($documentAnswersToConfirm > 0) {
+            $score += min(12, $documentAnswersToConfirm * 4);
+            $reasons[] = '- documents d’achat à confirmer';
         }
 
         return ['score' => $this->bound($score), 'label' => 'Vigilance', 'reasons' => $reasons ?: ['pas d’alerte majeure détectée avec les informations actuelles']];

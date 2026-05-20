@@ -25,6 +25,10 @@ class MainScreensTest extends TestCase
             ->assertOk()
             ->assertSee('Checklist visite immobilière');
 
+        $this->get('/guides/documents-achat-immobilier')
+            ->assertOk()
+            ->assertSee('Documents achat immobilier');
+
         $this->get('/robots.txt')
             ->assertOk()
             ->assertSee('Sitemap:');
@@ -32,6 +36,7 @@ class MainScreensTest extends TestCase
         $this->get('/sitemap.xml')
             ->assertOk()
             ->assertSee('/guides/cout-reel-mensuel-immobilier')
+            ->assertSee('/guides/documents-achat-immobilier')
             ->assertSee('<urlset', false);
     }
 

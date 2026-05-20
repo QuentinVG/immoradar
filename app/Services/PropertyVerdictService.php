@@ -85,6 +85,8 @@ class PropertyVerdictService
             'missing_charges' => 'Demander le montant exact des charges.',
             'missing_tax' => 'Demander la taxe foncière annuelle.',
             'bad_dpe' => 'Clarifier les travaux énergétiques possibles.',
+            'energy_audit' => 'Demander l’audit énergétique et ses scénarios de travaux.',
+            'documents_to_confirm' => 'Récupérer les diagnostics, PV d’AG et documents de copropriété utiles.',
             'high_works' => 'Faire chiffrer les travaux avant offre.',
             'missing_garage' => 'Vérifier les alternatives de stationnement.',
             'long_commute' => 'Tester le trajet en conditions réelles.',

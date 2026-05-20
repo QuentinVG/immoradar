@@ -4,6 +4,8 @@ namespace Tests\Feature;
 
 use App\Models\Project;
 use App\Models\Property;
+use App\Models\PropertyChecklistAnswer;
+use App\Models\VisitChecklistQuestion;
 use App\Services\ProjectSummaryService;
 use App\Services\PropertyAlertService;
 use App\Services\PropertyScoringService;
@@ -45,6 +47,40 @@ class DecisionServicesTest extends TestCase
 
         $this->assertTrue($alerts->contains('type', 'bad_dpe'));
         $this->assertTrue($alerts->contains('type', 'missing_charges'));
+    }
+
+    public function test_alerts_detect_energy_audit_needed_for_house_dpe_e(): void
+    {
+        $property = Property::factory()->create([
+            'property_type' => 'maison',
+            'transaction_type' => 'achat',
+            'dpe' => 'E',
+        ]);
+
+        $alerts = collect(app(PropertyAlertService::class)->evaluate($property));
+
+        $this->assertTrue($alerts->contains('type', 'energy_audit'));
+    }
+
+    public function test_alerts_detect_documents_to_confirm_from_visit_answers(): void
+    {
+        $property = Property::factory()->create();
+        $question = VisitChecklistQuestion::create([
+            'category' => 'Documents',
+            'question' => 'Le dossier de diagnostics est-il disponible ?',
+            'weight' => 2,
+            'is_active' => true,
+        ]);
+
+        PropertyChecklistAnswer::create([
+            'property_id' => $property->id,
+            'visit_checklist_question_id' => $question->id,
+            'answer' => 'unknown',
+        ]);
+
+        $alerts = collect(app(PropertyAlertService::class)->evaluate($property));
+
+        $this->assertTrue($alerts->contains('type', 'documents_to_confirm'));
     }
 
     public function test_verdict_detects_risky_crush(): void

@@ -46,6 +46,18 @@ $marketingPages = [
             ['title' => 'Décider au bon moment', 'body' => 'Si trop d’informations manquent, la bonne décision est souvent de sécuriser les données avant de faire une offre.'],
         ],
     ],
+    'documents-achat-immobilier' => [
+        'title' => 'Documents achat immobilier - Diagnostics, copropriété et audit',
+        'description' => 'Liste les documents à demander avant une offre immobilière : diagnostics, DPE, audit énergétique, charges, PV d’AG, travaux votés et informations de copropriété.',
+        'eyebrow' => 'Guide documents',
+        'h1' => 'Les documents à demander avant d’acheter un bien immobilier.',
+        'intro' => 'Une visite peut donner confiance, mais les documents confirment ce que le vendeur affirme. Diagnostics, copropriété, travaux et charges doivent être vérifiés avant de s’engager.',
+        'sections' => [
+            ['title' => 'Diagnostics obligatoires', 'body' => 'Demande le dossier de diagnostic technique : DPE, plomb, amiante, gaz, électricité, risques, termites ou assainissement selon le bien et sa localisation.'],
+            ['title' => 'Audit énergétique', 'body' => 'Pour une maison classée E, F ou G, vérifie si l’audit énergétique est disponible et lis les scénarios de travaux avant de juger le prix.'],
+            ['title' => 'Copropriété', 'body' => 'Pour un appartement, demande les charges, les PV d’assemblée générale, les travaux votés, le fonds travaux et les informations financières de la copropriété.'],
+        ],
+    ],
 ];
 
 Route::get('/', function () {
@@ -79,6 +91,7 @@ Route::get('/sitemap.xml', function () {
         'checklist-visite-immobiliere',
         'cout-reel-mensuel-immobilier',
         'comparer-biens-immobiliers',
+        'documents-achat-immobilier',
     ])->map(fn (string $slug): string => "  <url>\n    <loc>{$url}/guides/{$slug}</loc>\n    <priority>0.8</priority>\n  </url>")
         ->implode("\n");
 

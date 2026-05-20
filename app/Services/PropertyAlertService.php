@@ -47,6 +47,10 @@ class PropertyAlertService
             $alerts[] = $this->alert('bad_dpe', 'danger', 'DPE mauvais', 'Le DPE peut peser sur le confort, les travaux et la revente.');
         }
 
+        if ($property->transaction_type === 'achat' && $property->property_type === 'maison' && in_array($property->dpe, ['E', 'F', 'G'], true)) {
+            $alerts[] = $this->alert('energy_audit', 'warning', 'Audit énergétique à demander', 'Pour une maison classée E, F ou G, vérifie que l’audit énergétique est disponible avant décision.');
+        }
+
         if ($project?->requires_garage && ! $property->has_garage && ! $property->has_parking) {
             $alerts[] = $this->alert('missing_garage', 'danger', 'Stationnement manquant', 'Le projet demande un garage ou parking, mais ce bien n’en a pas.');
         }
@@ -61,6 +65,14 @@ class PropertyAlertService
 
         if (count($cost['missing']) >= 3) {
             $alerts[] = $this->alert('missing_information', 'warning', 'Informations importantes manquantes', 'Complète les données clés pour fiabiliser la comparaison.');
+        }
+
+        $documentAnswersToConfirm = $property->checklistAnswers
+            ->filter(fn ($answer): bool => $answer->question?->category === 'Documents' && in_array($answer->answer, ['no', 'unknown'], true))
+            ->count();
+
+        if ($documentAnswersToConfirm > 0) {
+            $alerts[] = $this->alert('documents_to_confirm', 'warning', 'Documents à vérifier', 'Diagnostics, copropriété ou audit énergétique restent à confirmer avant une offre.');
         }
 
         if ($scores['solidity']['score'] < 35) {

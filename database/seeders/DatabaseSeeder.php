@@ -83,6 +83,11 @@ class DatabaseSeeder extends Seeder
                 'Les travaux semblent-ils maîtrisables ?',
                 'Le DPE est-il acceptable ?',
             ],
+            'Documents' => [
+                'Le dossier de diagnostics est-il disponible ?',
+                'En copropriété, les PV d’AG et travaux votés ont-ils été consultés ?',
+                'Si le DPE est E, F ou G, l’audit énergétique est-il disponible ?',
+            ],
             'Ressenti' => [
                 'Est-ce que je me projette dans ce logement ?',
                 'Ai-je envie d’y retourner ?',
