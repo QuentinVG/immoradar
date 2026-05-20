@@ -209,8 +209,9 @@ La checklist de déploiement est disponible dans [`docs/DEPLOYMENT.md`](docs/DEP
 
 Chemin le moins cher :
 
+- Koyeb Free + Supabase Free pour viser 0 €/mois avec plus de configuration ;
 - Render Free pour une démo portfolio temporaire, via `render.yaml` ;
-- Railway Hobby pour une app réellement utilisable à petit coût ;
+- Railway Free puis Hobby pour une app réellement utilisable à petit coût ;
 - Laravel Cloud si tu veux rester dans un environnement Laravel plus natif.
 
 À retenir avant mise en ligne :
