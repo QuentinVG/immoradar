@@ -26,7 +26,10 @@
             initialAnswered: {{ $answeredCount }},
             total: {{ $totalQuestions }},
             initialCompatibility: {{ $scores['compatibility']['score'] }},
-            initialVigilance: {{ $scores['vigilance']['score'] }}
+            initialVigilance: {{ $scores['vigilance']['score'] }},
+            initialRiskCount: {{ $visitSummary['risk_count'] }},
+            initialUnknownCount: {{ $visitSummary['unknown_count'] }},
+            initialCriticalMissingCount: {{ $visitSummary['critical_missing_count'] }}
         })"
     >
         @if(session('status'))
@@ -37,6 +40,15 @@
                 Compte démo en lecture seule : les clics changent l'affichage, mais ne modifient pas les données. Crée ton compte pour sauvegarder.
             </div>
         @endif
+
+        <section class="mb-4 rounded-lg border border-teal-200 bg-teal-50 p-4">
+            <p class="text-sm font-black uppercase text-teal-700">Pendant la visite</p>
+            <ol class="mt-2 space-y-1 text-sm leading-6 text-teal-950">
+                <li>1. Réponds aux boutons sans chercher la perfection.</li>
+                <li>2. Mets “À vérifier” dès qu’une info dépend du vendeur ou d’un document.</li>
+                <li>3. Si tu réponds “Non” à un point critique, note quoi demander avant de partir.</li>
+            </ol>
+        </section>
 
         <div class="sticky top-16 z-10 -mx-4 border-b border-white/80 bg-white/90 px-4 py-3 shadow-sm shadow-slate-200/60 backdrop-blur sm:rounded-lg sm:border">
             <div class="flex items-center justify-between text-sm">
@@ -50,18 +62,54 @@
                 <p class="text-slate-500">Les réponses sont sauvegardées automatiquement sur ton compte.</p>
                 <p class="font-black" :class="statusClass" x-text="status"></p>
             </div>
+            <div class="mt-3 grid grid-cols-3 gap-2 text-xs">
+                <div class="rounded-md bg-rose-50 p-2 text-rose-900">
+                    <span class="block font-black" x-text="riskCount"></span>
+                    points négatifs
+                </div>
+                <div class="rounded-md bg-amber-50 p-2 text-amber-950">
+                    <span class="block font-black" x-text="unknownCount"></span>
+                    à vérifier
+                </div>
+                <div class="rounded-md bg-slate-100 p-2 text-slate-800">
+                    <span class="block font-black" x-text="criticalMissingCount"></span>
+                    critiques
+                </div>
+            </div>
         </div>
 
         <form method="POST" action="{{ route('projects.properties.visit.update', [$project, $property]) }}" class="mt-6 space-y-6">
             @csrf
             @foreach($questions as $category => $categoryQuestions)
                 <section class="ir-panel p-4">
-                    <h2 class="text-lg font-black text-slate-950">{{ $category }}</h2>
+                    @php
+                        $categoryAnswered = $categoryQuestions->filter(fn ($question) => ($answers->get($question->id)?->answer ?? 'unknown') !== 'unknown')->count();
+                    @endphp
+                    <div class="flex flex-wrap items-start justify-between gap-3">
+                        <div>
+                            <h2 class="text-lg font-black text-slate-950">{{ $category }}</h2>
+                            <p class="mt-1 text-sm text-slate-500">
+                                @switch($category)
+                                    @case('Technique') Cherche les signaux qui peuvent coûter cher : humidité, fissures, électricité, chauffage. @break
+                                    @case('Documents') Ne fais pas d’offre solide sans preuves écrites. @break
+                                    @case('Budget') Ces réponses fiabilisent le coût réel mensuel. @break
+                                    @case('Ressenti') Réponds honnêtement, puis relis à froid après la visite. @break
+                                    @default Réponds vite, ajoute une note seulement si quelque chose te marque.
+                                @endswitch
+                            </p>
+                        </div>
+                        <span class="rounded-full bg-slate-100 px-3 py-1 text-xs font-black text-slate-700">{{ $categoryAnswered }}/{{ $categoryQuestions->count() }}</span>
+                    </div>
                     <div class="mt-4 space-y-5">
                         @foreach($categoryQuestions as $question)
                             @php($current = $answers->get($question->id))
                             <div class="rounded-lg border border-slate-200 bg-white p-4" data-question="{{ $question->id }}">
-                                <p class="font-black text-slate-950">{{ $question->question }}</p>
+                                <div class="flex items-start justify-between gap-3">
+                                    <p class="font-black text-slate-950">{{ $question->question }}</p>
+                                    @if($question->weight >= 2)
+                                        <span class="shrink-0 rounded-full bg-rose-50 px-2 py-1 text-xs font-black text-rose-700">critique</span>
+                                    @endif
+                                </div>
                                 @if($question->help_text)
                                     <p class="mt-1 text-sm text-slate-500">{{ $question->help_text }}</p>
                                 @endif
@@ -86,6 +134,9 @@
                     <div class="rounded-md bg-teal-50 p-3"><span class="text-slate-500">Compatibilité</span><strong class="block text-xl text-teal-800"><span x-text="compatibility"></span>/100</strong></div>
                     <div class="rounded-md bg-rose-50 p-3"><span class="text-slate-500">Vigilance</span><strong class="block text-xl text-rose-700"><span x-text="vigilance"></span>/100</strong></div>
                 </div>
+                <div class="mt-4 rounded-md border border-amber-200 bg-amber-50 p-3 text-sm leading-6 text-amber-950" x-show="criticalMissingCount > 0 || riskCount > 0">
+                    Ne décide pas tout de suite : il reste des points négatifs ou critiques. Note quoi demander au vendeur avant de quitter la visite.
+                </div>
             </div>
 
             <div class="sticky bottom-0 -mx-4 border-t border-white/80 bg-white/90 px-4 py-3 backdrop-blur">
@@ -95,11 +146,14 @@
     </div>
 
     <script>
-        window.visitChecklist = ({ autosaveUrl, csrfToken, demo, initialAnswered, total, initialCompatibility, initialVigilance }) => ({
+        window.visitChecklist = ({ autosaveUrl, csrfToken, demo, initialAnswered, total, initialCompatibility, initialVigilance, initialRiskCount, initialUnknownCount, initialCriticalMissingCount }) => ({
             answeredCount: initialAnswered,
             total,
             compatibility: initialCompatibility,
             vigilance: initialVigilance,
+            riskCount: initialRiskCount,
+            unknownCount: initialUnknownCount,
+            criticalMissingCount: initialCriticalMissingCount,
             status: demo ? 'Démo lecture seule' : 'Sauvegarde automatique active',
             statusClass: demo ? 'text-amber-700' : 'text-teal-700',
             progressStyle() {
@@ -140,6 +194,9 @@
                     this.total = data.total_questions;
                     this.compatibility = data.compatibility;
                     this.vigilance = data.vigilance;
+                    this.riskCount = data.risk_count;
+                    this.unknownCount = data.unknown_count;
+                    this.criticalMissingCount = data.critical_missing_count;
                     this.status = 'Enregistré';
                     this.statusClass = 'text-teal-700';
                 } catch (error) {

@@ -100,10 +100,30 @@ class DatabaseSeeder extends Seeder
             foreach ($items as $question) {
                 VisitChecklistQuestion::updateOrCreate(
                     ['question' => $question],
-                    ['category' => $category, 'weight' => $category === 'Technique' ? 2 : 1, 'is_active' => true],
+                    [
+                        'category' => $category,
+                        'help_text' => $this->questionHelp($question),
+                        'weight' => in_array($category, ['Technique', 'Documents'], true) ? 2 : 1,
+                        'is_active' => true,
+                    ],
                 );
             }
         }
+    }
+
+    private function questionHelp(string $question): ?string
+    {
+        return match ($question) {
+            'Y a-t-il des traces d’humidité ?' => 'Regarde angles, plafonds, bas de murs, odeurs et joints autour des fenêtres.',
+            'Y a-t-il des fissures inquiétantes ?' => 'Une fissure large, traversante ou récente doit être clarifiée avant offre.',
+            'Le tableau électrique semble-t-il correct ?' => 'Si doute : demander diagnostic électricité et budget de remise aux normes.',
+            'Le dossier de diagnostics est-il disponible ?' => 'Sans DDT, la décision reste fragile même si la visite est positive.',
+            'En copropriété, les PV d’AG et travaux votés ont-ils été consultés ?' => 'Lis les travaux votés, impayés, litiges et gros entretiens prévus.',
+            'Si le DPE est E, F ou G, l’audit énergétique est-il disponible ?' => 'Indispensable pour juger les travaux énergétiques et la négociation.',
+            'Les charges sont-elles connues ?' => 'Demande le montant exact et ce qu’il inclut.',
+            'La taxe foncière est-elle connue ?' => 'À intégrer au coût mensuel réel.',
+            default => null,
+        };
     }
 
     /**

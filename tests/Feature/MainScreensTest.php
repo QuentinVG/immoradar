@@ -73,7 +73,9 @@ class MainScreensTest extends TestCase
             ->assertOk()
             ->assertSee('Prêt pour offre ?')
             ->assertSee('Revue avant offre');
-        $this->actingAs($user)->get(route('projects.properties.visit', [$property->project, $property]))->assertOk();
+        $this->actingAs($user)->get(route('projects.properties.visit', [$property->project, $property]))
+            ->assertOk()
+            ->assertSee('Pendant la visite');
         $this->actingAs($user)->get(route('projects.compare', $property->project))->assertOk();
     }
 }

@@ -21,12 +21,17 @@ class VisitChecklistController extends Controller
 
         $questions = VisitChecklistQuestion::query()
             ->where('is_active', true)
-            ->orderBy('category')
             ->orderBy('id')
             ->get()
-            ->groupBy('category');
+            ->groupBy('category')
+            ->sortBy(function ($items, string $category): int {
+                $position = array_search($category, $this->categoryOrder(), true);
+
+                return $position === false ? 99 : $position;
+            });
 
         $answers = $property->checklistAnswers()->get()->keyBy('visit_checklist_question_id');
+        $visitSummary = $this->visitSummary($property);
 
         return view('visit.edit', [
             'project' => $project,
@@ -34,6 +39,7 @@ class VisitChecklistController extends Controller
             'questions' => $questions,
             'answers' => $answers,
             'scores' => $scoringService->score($property),
+            'visitSummary' => $visitSummary,
         ]);
     }
 
@@ -79,6 +85,7 @@ class VisitChecklistController extends Controller
         $scores = $scoringService->score($property);
         $totalQuestions = VisitChecklistQuestion::query()->where('is_active', true)->count();
         $answeredCount = $property->checklistAnswers()->where('answer', '!=', 'unknown')->count();
+        $visitSummary = $this->visitSummary($property);
 
         return response()->json([
             'message' => 'Réponse enregistrée.',
@@ -87,6 +94,9 @@ class VisitChecklistController extends Controller
             'progress' => $totalQuestions > 0 ? round(($answeredCount / $totalQuestions) * 100) : 0,
             'compatibility' => $scores['compatibility']['score'],
             'vigilance' => $scores['vigilance']['score'],
+            'risk_count' => $visitSummary['risk_count'],
+            'unknown_count' => $visitSummary['unknown_count'],
+            'critical_missing_count' => $visitSummary['critical_missing_count'],
         ]);
     }
 
@@ -116,5 +126,33 @@ class VisitChecklistController extends Controller
                 'comment' => $comment,
             ],
         );
+    }
+
+    /**
+     * @return array{risk_count:int,unknown_count:int,critical_missing_count:int}
+     */
+    private function visitSummary(Property $property): array
+    {
+        $property->loadMissing('checklistAnswers.question');
+
+        return [
+            'risk_count' => $property->checklistAnswers
+                ->filter(fn ($answer): bool => $answer->answer === 'no' && $answer->question?->category !== 'Ressenti')
+                ->count(),
+            'unknown_count' => $property->checklistAnswers
+                ->where('answer', 'unknown')
+                ->count(),
+            'critical_missing_count' => $property->checklistAnswers
+                ->filter(fn ($answer): bool => in_array($answer->answer, ['no', 'unknown'], true) && $answer->question !== null && $answer->question->weight >= 2)
+                ->count(),
+        ];
+    }
+
+    /**
+     * @return array<int,string>
+     */
+    private function categoryOrder(): array
+    {
+        return ['Quartier', 'Immeuble / extérieur', 'Intérieur', 'Technique', 'Budget', 'Documents', 'Ressenti'];
     }
 }
