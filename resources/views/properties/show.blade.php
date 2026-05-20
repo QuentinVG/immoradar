@@ -20,20 +20,20 @@
         @endif
 
         <section class="grid gap-4 lg:grid-cols-[1.2fr_0.8fr]">
-            <div class="ir-panel border-teal-200 bg-teal-50/80 p-6">
-                <p class="text-sm font-black uppercase text-teal-700">Verdict</p>
-                <h2 class="mt-2 text-4xl font-black text-slate-950">{{ $verdict['title'] }}</h2>
-                <p class="mt-3 max-w-3xl text-base leading-7 text-slate-700">{{ $verdict['summary'] }}</p>
+            <div class="ir-hero-band p-6">
+                <p class="text-sm font-black uppercase text-amber-200">Verdict</p>
+                <h2 class="mt-2 text-4xl font-black text-white">{{ $verdict['title'] }}</h2>
+                <p class="mt-3 max-w-3xl text-base leading-7 text-slate-200">{{ $verdict['summary'] }}</p>
                 <div class="mt-5 grid gap-4 md:grid-cols-2">
-                    <div class="rounded-lg bg-white/75 p-4">
-                        <h3 class="font-black text-slate-950">Points forts</h3>
-                        <ul class="mt-2 space-y-1 text-sm text-slate-600">
+                    <div class="ir-glass p-4">
+                        <h3 class="font-black text-white">Points forts</h3>
+                        <ul class="mt-2 space-y-1 text-sm text-slate-100">
                             @foreach($verdict['strengths'] as $item)<li>{{ $item }}</li>@endforeach
                         </ul>
                     </div>
-                    <div class="rounded-lg bg-white/75 p-4">
-                        <h3 class="font-black text-slate-950">À sécuriser</h3>
-                        <ul class="mt-2 space-y-1 text-sm text-slate-600">
+                    <div class="ir-glass p-4">
+                        <h3 class="font-black text-white">À sécuriser</h3>
+                        <ul class="mt-2 space-y-1 text-sm text-slate-100">
                             @foreach($verdict['watch_points'] as $item)<li>{{ $item }}</li>@endforeach
                         </ul>
                     </div>
@@ -154,8 +154,8 @@
                 <div class="ir-panel p-5">
                     <p class="text-sm text-slate-500">{{ $label }}</p>
                     <p class="mt-2 text-3xl font-black {{ $key === 'vigilance' ? 'text-rose-700' : 'text-slate-950' }}">{{ $scores[$key]['score'] }}/100</p>
-                    <div class="mt-3 h-2 rounded-full bg-slate-100">
-                        <div class="h-2 rounded-full {{ $key === 'vigilance' ? 'bg-rose-600' : 'bg-teal-700' }}" style="width: {{ $scores[$key]['score'] }}%"></div>
+                    <div class="mt-3 ir-scorebar">
+                        <div class="{{ $key === 'vigilance' ? 'ir-riskbar-fill' : 'ir-scorebar-fill' }}" style="width: {{ $scores[$key]['score'] }}%"></div>
                     </div>
                     <ul class="mt-3 space-y-1 text-xs text-slate-600">
                         @foreach(array_slice($scores[$key]['reasons'], 0, 4) as $reason)

@@ -41,7 +41,7 @@
             </div>
         @endif
 
-        <section class="mb-4 rounded-lg border border-teal-200 bg-teal-50 p-4">
+        <section class="mb-4 rounded-lg border border-teal-200 bg-gradient-to-br from-teal-50 to-emerald-50 p-4 shadow-sm shadow-teal-900/5">
             <p class="text-sm font-black uppercase text-teal-700">Pendant la visite</p>
             <ol class="mt-2 space-y-1 text-sm leading-6 text-teal-950">
                 <li>1. Réponds aux boutons sans chercher la perfection.</li>
@@ -50,7 +50,7 @@
             </ol>
         </section>
 
-        <div class="sticky top-16 z-10 -mx-4 border-b border-white/80 bg-white/90 px-4 py-3 shadow-sm shadow-slate-200/60 backdrop-blur sm:rounded-lg sm:border">
+        <div class="sticky top-16 z-10 -mx-4 border-b border-white/80 bg-white/95 px-4 py-3 shadow-lg shadow-slate-900/10 backdrop-blur sm:rounded-lg sm:border">
             <div class="flex items-center justify-between text-sm">
                 <span class="font-black text-slate-950">Progression visite</span>
                 <span class="font-semibold text-slate-600" x-text="answeredCount + '/' + total"></span>
@@ -63,15 +63,15 @@
                 <p class="font-black" :class="statusClass" x-text="status"></p>
             </div>
             <div class="mt-3 grid grid-cols-3 gap-2 text-xs">
-                <div class="rounded-md bg-rose-50 p-2 text-rose-900">
+                <div class="rounded-md border border-rose-100 bg-rose-50 p-2 text-rose-900 shadow-sm">
                     <span class="block font-black" x-text="riskCount"></span>
                     points négatifs
                 </div>
-                <div class="rounded-md bg-amber-50 p-2 text-amber-950">
+                <div class="rounded-md border border-amber-100 bg-amber-50 p-2 text-amber-950 shadow-sm">
                     <span class="block font-black" x-text="unknownCount"></span>
                     à vérifier
                 </div>
-                <div class="rounded-md bg-slate-100 p-2 text-slate-800">
+                <div class="rounded-md border border-slate-200 bg-slate-100 p-2 text-slate-800 shadow-sm">
                     <span class="block font-black" x-text="criticalMissingCount"></span>
                     critiques
                 </div>
@@ -103,7 +103,7 @@
                     <div class="mt-4 space-y-5">
                         @foreach($categoryQuestions as $question)
                             @php($current = $answers->get($question->id))
-                            <div class="rounded-lg border border-slate-200 bg-white p-4" data-question="{{ $question->id }}">
+                            <div class="rounded-lg border border-slate-200 bg-white p-4 shadow-sm shadow-slate-900/5" data-question="{{ $question->id }}">
                                 <div class="flex items-start justify-between gap-3">
                                     <p class="font-black text-slate-950">{{ $question->question }}</p>
                                     @if($question->weight >= 2)

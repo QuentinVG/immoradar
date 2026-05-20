@@ -15,26 +15,28 @@
             <div class="rounded-md border border-teal-200 bg-teal-50 p-4 text-sm font-semibold text-teal-900">{{ session('status') }}</div>
         @endif
 
-        <section class="grid gap-4 lg:grid-cols-[1.15fr_0.85fr]">
-            <div class="ir-panel overflow-hidden bg-slate-950 p-6 text-white">
+        <section class="grid gap-4 lg:grid-cols-[1.2fr_0.8fr]">
+            <div class="ir-hero-band p-6 sm:p-8">
                 <p class="text-sm font-black uppercase text-amber-300">Parcours rapide</p>
-                <h2 class="mt-2 text-2xl font-black">1 projet, 3 biens, 1 checklist, une décision plus calme.</h2>
-                <div class="mt-5 grid gap-3 text-sm sm:grid-cols-3">
-                    <span class="rounded-lg border border-white/10 bg-white/10 p-3">Coût réel</span>
-                    <span class="rounded-lg border border-white/10 bg-white/10 p-3">Alertes</span>
-                    <span class="rounded-lg border border-white/10 bg-white/10 p-3">Verdict</span>
+                <h2 class="mt-2 max-w-3xl text-3xl font-black leading-tight sm:text-4xl">Un tableau de bord pour calmer le coup de cœur avant qu’il décide à ta place.</h2>
+                <p class="mt-4 max-w-2xl text-sm leading-6 text-slate-200">Tu ajoutes quelques biens, tu visites avec une checklist, puis ImmoRadar remonte le coût réel, les alertes et le meilleur candidat.</p>
+                <div class="mt-6 grid gap-3 text-sm sm:grid-cols-3">
+                    <span class="ir-glass p-3 font-black">Coût réel</span>
+                    <span class="ir-glass p-3 font-black">Alertes utiles</span>
+                    <span class="ir-glass p-3 font-black">Verdict clair</span>
                 </div>
             </div>
             <div class="ir-soft-panel p-6">
                 <p class="text-sm font-black uppercase text-rose-700">Rappel utile</p>
-                <h2 class="mt-2 text-xl font-black text-slate-950">Le coup de cœur vient après les vérifications.</h2>
-                <p class="mt-2 text-sm leading-6 text-slate-600">ImmoRadar met les risques avant la décision : budget, DPE, trajet, travaux, charges, infos manquantes.</p>
+                <h2 class="mt-2 text-xl font-black text-slate-950">Le coup de cœur ne disparaît pas. Il passe juste après les preuves.</h2>
+                <p class="mt-2 text-sm leading-6 text-slate-600">Budget, DPE, trajet, travaux, charges, documents manquants : les vrais sujets remontent avant l’offre.</p>
             </div>
         </section>
 
         <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
             @forelse($projects as $project)
-                <a href="{{ route('projects.show', $project) }}" class="ir-panel group p-5 transition hover:-translate-y-0.5 hover:border-teal-300 hover:shadow-lg hover:shadow-teal-900/10">
+                <a href="{{ route('projects.show', $project) }}" class="ir-panel group overflow-hidden p-5 transition hover:-translate-y-0.5 hover:border-teal-300 hover:shadow-xl hover:shadow-teal-900/10">
+                    <div class="-mx-5 -mt-5 mb-5 h-2 bg-gradient-to-r from-teal-600 via-emerald-400 to-amber-300"></div>
                     <div class="flex items-start justify-between gap-3">
                         <div>
                             <h2 class="text-lg font-black text-slate-950 group-hover:text-teal-800">{{ $project->name }}</h2>

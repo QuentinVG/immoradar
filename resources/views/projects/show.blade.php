@@ -20,42 +20,42 @@
         @endif
 
         <section class="grid gap-4 md:grid-cols-4">
-            <div class="ir-panel p-5">
+            <div class="ir-mini-card">
                 <p class="text-sm text-slate-500">Biens suivis</p>
                 <p class="mt-2 text-3xl font-black text-slate-950">{{ $summary['properties_count'] }}</p>
             </div>
-            <div class="ir-panel p-5">
+            <div class="ir-mini-card">
                 <p class="text-sm text-slate-500">Coût moyen</p>
                 <p class="mt-2 text-3xl font-black text-slate-950">{{ $summary['average_monthly_cost'] ? number_format($summary['average_monthly_cost'], 0, ',', ' ') . ' €' : '—' }}</p>
             </div>
-            <div class="ir-panel border-amber-200 bg-amber-50/80 p-5">
+            <div class="ir-mini-card border-amber-200 bg-amber-50/80">
                 <p class="text-sm text-slate-500">Infos à compléter</p>
                 <p class="mt-2 text-3xl font-black text-slate-950">{{ $summary['missing_information_count'] }}</p>
             </div>
-            <div class="ir-panel p-5">
+            <div class="ir-mini-card">
                 <p class="text-sm text-slate-500">Budget max</p>
                 <p class="mt-2 text-3xl font-black text-slate-950">{{ $project->max_budget ? number_format((float) $project->max_budget, 0, ',', ' ') . ' €' : '—' }}</p>
             </div>
         </section>
 
-        <section class="ir-panel overflow-hidden p-6">
+        <section class="ir-hero-band p-6 sm:p-8">
             <div class="grid gap-6 lg:grid-cols-[0.8fr_1.2fr] lg:items-center">
                 <div>
-                    <p class="text-sm font-black uppercase text-teal-700">Niveau de décision</p>
-                    <h2 class="mt-2 text-3xl font-black text-slate-950">{{ $summary['decision_readiness']['label'] }}</h2>
-                    <p class="mt-3 text-5xl font-black text-teal-800">{{ $summary['decision_readiness']['score'] }}/100</p>
-                    <div class="mt-4 h-2 rounded-full bg-slate-100">
-                        <div class="h-2 rounded-full bg-teal-700" style="width: {{ $summary['decision_readiness']['score'] }}%"></div>
+                    <p class="text-sm font-black uppercase text-amber-200">Niveau de décision</p>
+                    <h2 class="mt-2 text-3xl font-black text-white">{{ $summary['decision_readiness']['label'] }}</h2>
+                    <p class="mt-3 text-6xl font-black text-teal-200">{{ $summary['decision_readiness']['score'] }}/100</p>
+                    <div class="mt-4 ir-scorebar bg-white/15">
+                        <div class="ir-scorebar-fill" style="width: {{ $summary['decision_readiness']['score'] }}%"></div>
                     </div>
                 </div>
                 <div class="grid gap-3">
-                    <div class="rounded-lg bg-amber-50 p-4">
-                        <span class="text-sm font-semibold text-slate-600">Checklists remplies</span>
-                        <strong class="mt-1 block text-2xl text-amber-950">{{ $summary['decision_readiness']['checklist_progress'] }}%</strong>
+                    <div class="ir-glass p-4">
+                        <span class="text-sm font-semibold text-slate-200">Checklists remplies</span>
+                        <strong class="mt-1 block text-2xl text-white">{{ $summary['decision_readiness']['checklist_progress'] }}%</strong>
                     </div>
-                    <div class="rounded-lg bg-slate-50 p-4">
-                        <span class="text-sm font-semibold text-slate-600">À faire avant de trancher</span>
-                        <ul class="mt-2 space-y-1 text-sm text-slate-700">
+                    <div class="ir-glass p-4">
+                        <span class="text-sm font-semibold text-slate-200">À faire avant de trancher</span>
+                        <ul class="mt-2 space-y-1 text-sm text-slate-100">
                             @foreach($summary['decision_readiness']['actions'] as $action)
                                 <li>{{ $action }}</li>
                             @endforeach

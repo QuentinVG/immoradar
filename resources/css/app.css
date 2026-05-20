@@ -5,21 +5,70 @@
 @layer base {
     body {
         background:
-            linear-gradient(180deg, #f8f6ef 0%, #eef6f3 42%, #f8fafc 100%);
+            linear-gradient(135deg, rgba(15, 118, 110, 0.10) 0%, transparent 28%),
+            linear-gradient(225deg, rgba(245, 158, 11, 0.12) 0%, transparent 26%),
+            linear-gradient(180deg, #fbfaf5 0%, #eef8f5 44%, #f8fafc 100%);
+        min-height: 100vh;
     }
 }
 
 @layer components {
     .ir-panel {
-        @apply rounded-lg border border-slate-200/80 bg-white/90 shadow-sm shadow-slate-200/60;
+        @apply rounded-lg border border-white/80 bg-white/90 shadow-lg shadow-slate-900/5 backdrop-blur;
     }
 
     .ir-soft-panel {
-        @apply rounded-lg border border-white/70 bg-white/65 shadow-sm shadow-slate-200/50 backdrop-blur;
+        @apply rounded-lg border border-white/70 bg-white/70 shadow-lg shadow-slate-900/5 backdrop-blur;
+    }
+
+    .ir-hero-band {
+        @apply relative overflow-hidden rounded-lg border border-slate-900 bg-slate-950 text-white shadow-xl shadow-slate-900/20;
+        background:
+            linear-gradient(135deg, rgba(20, 184, 166, 0.24), transparent 42%),
+            linear-gradient(225deg, rgba(245, 158, 11, 0.18), transparent 38%),
+            #101827;
+    }
+
+    .ir-hero-band::before {
+        @apply pointer-events-none absolute inset-0 opacity-40;
+        content: "";
+        background-image:
+            linear-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(255, 255, 255, 0.08) 1px, transparent 1px);
+        background-size: 34px 34px;
+        mask-image: linear-gradient(90deg, black, transparent 82%);
+    }
+
+    .ir-hero-band > * {
+        @apply relative;
+    }
+
+    .ir-glass {
+        @apply rounded-lg border border-white/15 bg-white/10 shadow-lg shadow-slate-950/10 backdrop-blur;
+    }
+
+    .ir-kicker {
+        @apply text-xs font-black uppercase tracking-normal text-teal-700;
+    }
+
+    .ir-mini-card {
+        @apply rounded-lg border border-slate-200/70 bg-white/80 p-4 shadow-sm shadow-slate-900/5 transition hover:-translate-y-0.5 hover:border-teal-300 hover:shadow-lg hover:shadow-teal-900/10;
+    }
+
+    .ir-scorebar {
+        @apply h-2 overflow-hidden rounded-full bg-slate-200/80;
+    }
+
+    .ir-scorebar-fill {
+        @apply h-full rounded-full bg-gradient-to-r from-teal-600 via-emerald-500 to-amber-400;
+    }
+
+    .ir-riskbar-fill {
+        @apply h-full rounded-full bg-gradient-to-r from-amber-400 to-rose-600;
     }
 
     .ir-pill {
-        @apply inline-flex items-center rounded-md border px-2.5 py-1 text-xs font-black uppercase tracking-normal;
+        @apply inline-flex items-center rounded-md border px-2.5 py-1 text-xs font-black uppercase tracking-normal shadow-sm shadow-slate-900/5;
     }
 
     .ir-action {
@@ -27,19 +76,19 @@
     }
 
     .ir-action-primary {
-        @apply ir-action border border-teal-700 bg-teal-700 text-white shadow-sm shadow-teal-900/15 hover:bg-teal-800;
+        @apply ir-action border border-teal-800 bg-gradient-to-r from-teal-700 to-emerald-600 text-white shadow-lg shadow-teal-900/15 hover:from-teal-800 hover:to-emerald-700;
     }
 
     .ir-action-secondary {
-        @apply ir-action border border-slate-300 bg-white/80 text-slate-800 hover:border-teal-300 hover:text-teal-800;
+        @apply ir-action border border-slate-300 bg-white/85 text-slate-800 shadow-sm shadow-slate-900/5 hover:border-teal-300 hover:text-teal-800 hover:shadow-md;
     }
 
     .ir-action-warm {
-        @apply ir-action border border-amber-500 bg-amber-400 text-slate-950 shadow-sm shadow-amber-900/10 hover:bg-amber-300;
+        @apply ir-action border border-amber-500 bg-gradient-to-r from-amber-300 to-orange-300 text-slate-950 shadow-lg shadow-amber-900/10 hover:from-amber-200 hover:to-orange-200;
     }
 
     .visit-choice {
-        @apply flex min-h-12 cursor-pointer items-center justify-center rounded-md border border-slate-200 bg-white px-3 py-2 text-center text-sm font-black text-slate-700 transition hover:border-teal-300;
+        @apply flex min-h-12 cursor-pointer items-center justify-center rounded-md border border-slate-200 bg-white px-3 py-2 text-center text-sm font-black text-slate-700 shadow-sm shadow-slate-900/5 transition hover:-translate-y-0.5 hover:border-teal-300 hover:shadow-md;
     }
 
     .visit-choice:has(input:focus-visible) {

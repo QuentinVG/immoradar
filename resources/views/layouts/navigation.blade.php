@@ -1,4 +1,4 @@
-<nav x-data="{ open: false }" class="sticky top-0 z-30 border-b border-white/70 bg-white/80 backdrop-blur">
+<nav x-data="{ open: false }" class="sticky top-0 z-30 border-b border-white/70 bg-white/85 shadow-sm shadow-slate-900/5 backdrop-blur">
     <!-- Primary Navigation Menu -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16">
@@ -6,8 +6,11 @@
                 <!-- Logo -->
                 <div class="shrink-0 flex items-center">
                     <a href="{{ route('projects.index') }}" class="inline-flex items-center gap-3 font-black text-slate-950">
-                        <span class="grid h-9 w-9 place-items-center rounded-lg bg-teal-700 text-sm text-white">IR</span>
-                        <span>ImmoRadar</span>
+                        <span class="grid h-10 w-10 place-items-center rounded-lg bg-gradient-to-br from-teal-600 to-emerald-500 text-sm text-white shadow-lg shadow-teal-900/20">IR</span>
+                        <span class="grid leading-tight">
+                            <span>ImmoRadar</span>
+                            <span class="hidden text-xs font-semibold text-slate-500 lg:block">Décider sans emballement</span>
+                        </span>
                     </a>
                 </div>
 

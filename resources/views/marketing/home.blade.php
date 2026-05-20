@@ -28,10 +28,10 @@
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
     <body class="bg-slate-50 font-sans text-slate-900 antialiased">
-        <header class="border-b border-slate-200 bg-white">
+        <header class="border-b border-white/70 bg-white/85 shadow-sm shadow-slate-900/5 backdrop-blur">
             <div class="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-4 sm:px-6 lg:px-8">
                 <a href="{{ route('marketing.home') }}" class="inline-flex items-center gap-3 font-black">
-                    <span class="grid h-10 w-10 place-items-center rounded-lg bg-teal-700 text-white">IR</span>
+                    <span class="grid h-10 w-10 place-items-center rounded-lg bg-gradient-to-br from-teal-600 to-emerald-500 text-white shadow-lg shadow-teal-900/20">IR</span>
                     <span>ImmoRadar</span>
                 </a>
                 <nav class="flex items-center gap-2">
@@ -42,11 +42,11 @@
         </header>
 
         <main>
-            <section class="bg-[#f3f7f3]">
+            <section class="bg-gradient-to-br from-teal-50 via-white to-amber-50">
                 <div class="mx-auto grid max-w-7xl items-center gap-10 px-4 py-12 sm:px-6 lg:grid-cols-[1fr_0.95fr] lg:px-8 lg:py-16">
                     <div>
                         <p class="text-sm font-black uppercase text-teal-700">Checklist visite, coût réel, verdict</p>
-                        <h1 class="mt-4 max-w-4xl text-4xl font-black leading-tight text-slate-950 md:text-6xl">Visite un bien sans te laisser embarquer par le coup de cœur.</h1>
+                        <h1 class="mt-4 max-w-4xl text-4xl font-black leading-tight text-slate-950 md:text-6xl">Aime le bien si tu veux. Décide avec les preuves.</h1>
                         <p class="mt-6 max-w-2xl text-lg leading-8 text-slate-700">
                             ImmoRadar t'aide à comparer tes biens, préparer les questions de visite, estimer le coût réel mensuel et voir ce qui doit être vérifié avant une offre.
                         </p>
@@ -80,7 +80,7 @@
                         </dl>
                     </div>
 
-                    <aside class="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+                    <aside class="ir-panel p-5 shadow-xl shadow-teal-900/10">
                         <div class="flex items-start justify-between gap-4 border-b border-slate-100 pb-4">
                             <div>
                                 <p class="text-xs font-black uppercase text-slate-500">Exemple de synthèse</p>
@@ -90,17 +90,17 @@
                         </div>
 
                         <div class="mt-5 grid gap-3 sm:grid-cols-3">
-                            <div class="rounded-lg bg-teal-50 p-4">
+                            <div class="rounded-lg border border-teal-100 bg-teal-50 p-4 shadow-sm">
                                 <span class="text-xs font-black uppercase text-teal-700">Compatibilité</span>
                                 <strong class="mt-1 block text-3xl text-teal-950">78</strong>
                                 <p class="text-sm text-teal-900">bon compromis</p>
                             </div>
-                            <div class="rounded-lg bg-slate-100 p-4">
+                            <div class="rounded-lg border border-slate-200 bg-slate-100 p-4 shadow-sm">
                                 <span class="text-xs font-black uppercase text-slate-500">Coût réel</span>
                                 <strong class="mt-1 block text-3xl text-slate-950">986 €</strong>
                                 <p class="text-sm text-slate-600">par mois estimé</p>
                             </div>
-                            <div class="rounded-lg bg-rose-50 p-4">
+                            <div class="rounded-lg border border-rose-100 bg-rose-50 p-4 shadow-sm">
                                 <span class="text-xs font-black uppercase text-rose-700">Vigilance</span>
                                 <strong class="mt-1 block text-3xl text-rose-950">42</strong>
                                 <p class="text-sm text-rose-900">à vérifier</p>

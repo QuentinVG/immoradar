@@ -14,7 +14,7 @@
         <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
             @forelse($cards as $card)
                 @php($property = $card['property'])
-                <a href="{{ route('projects.properties.show', [$project, $property]) }}" class="ir-panel group overflow-hidden transition hover:-translate-y-0.5 hover:border-teal-300 hover:shadow-lg hover:shadow-teal-900/10">
+                <a href="{{ route('projects.properties.show', [$project, $property]) }}" class="ir-panel group overflow-hidden transition hover:-translate-y-0.5 hover:border-teal-300 hover:shadow-xl hover:shadow-teal-900/10">
                     <div class="flex h-36 items-center justify-center bg-gradient-to-br from-slate-100 via-teal-50 to-amber-50 text-sm font-semibold text-slate-500">
                         @if($property->main_photo_path)
                             <img src="{{ Storage::url($property->main_photo_path) }}" alt="{{ $property->title }}" class="h-full w-full object-cover">
@@ -26,8 +26,8 @@
                         <h2 class="text-lg font-black text-slate-950 group-hover:text-teal-800">{{ $property->title }}</h2>
                         <p class="mt-1 text-sm text-slate-500">{{ $property->city }} · {{ $card['verdict'] }}</p>
                         <div class="mt-4 grid grid-cols-2 gap-3 text-sm">
-                            <div class="rounded-md bg-teal-50 p-3"><span class="text-slate-500">Compat.</span><strong class="block text-teal-800">{{ $card['compatibility'] }}/100</strong></div>
-                            <div class="rounded-md bg-amber-50 p-3"><span class="text-slate-500">Coût réel</span><strong class="block">{{ number_format($card['real_monthly_cost'], 0, ',', ' ') }} €</strong></div>
+                            <div class="rounded-md border border-teal-100 bg-teal-50 p-3 shadow-sm"><span class="text-slate-500">Compat.</span><strong class="block text-teal-800">{{ $card['compatibility'] }}/100</strong></div>
+                            <div class="rounded-md border border-amber-100 bg-amber-50 p-3 shadow-sm"><span class="text-slate-500">Coût réel</span><strong class="block">{{ number_format($card['real_monthly_cost'], 0, ',', ' ') }} €</strong></div>
                         </div>
                     </div>
                 </a>

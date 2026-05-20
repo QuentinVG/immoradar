@@ -20,14 +20,14 @@
             @include('layouts.navigation')
             @auth
                 @if(Auth::user()->isDemoAccount())
-                    <div class="border-b border-amber-200 bg-amber-50 px-4 py-2 text-center text-sm font-semibold text-amber-950">
+                    <div class="border-b border-amber-200 bg-amber-50/95 px-4 py-2 text-center text-sm font-semibold text-amber-950 shadow-sm shadow-amber-900/10">
                         Compte démo en lecture seule. Crée ton propre compte pour modifier les données.
                     </div>
                 @endif
             @endauth
 
             @isset($header)
-                <header class="border-b border-white/70 bg-white/60 shadow-sm shadow-slate-200/60 backdrop-blur">
+                <header class="border-b border-white/70 bg-white/70 shadow-sm shadow-slate-200/60 backdrop-blur">
                     <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
                         {{ $header }}
                     </div>

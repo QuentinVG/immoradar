@@ -17,7 +17,7 @@ class MainScreensTest extends TestCase
     {
         $this->get('/')
             ->assertOk()
-            ->assertSee('Visite un bien sans te laisser embarquer')
+            ->assertSee('Aime le bien si tu veux. Décide avec les preuves.')
             ->assertSee('/guides/checklist-visite-immobiliere')
             ->assertSee('SoftwareApplication');
 

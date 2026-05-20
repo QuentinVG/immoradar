@@ -36,8 +36,9 @@
         --teal-dark: #134e4a;
         --amber: #92400e;
         --rose: #9f1239;
-        --bg: #f3f7f3;
+        --bg: #f2fbf7;
         --surface: #ffffff;
+        --shadow: 0 24px 70px rgba(15, 23, 42, 0.12);
       }
 
       * {
@@ -47,7 +48,10 @@
       body {
         margin: 0;
         color: var(--ink);
-        background: #f8fafc;
+        background:
+          linear-gradient(135deg, rgba(15, 118, 110, 0.12), transparent 32%),
+          linear-gradient(225deg, rgba(245, 158, 11, 0.14), transparent 28%),
+          #f8fafc;
         font-family:
           Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       }
@@ -57,8 +61,9 @@
       }
 
       header {
-        border-bottom: 1px solid var(--line);
-        background: white;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.78);
+        background: rgba(255, 255, 255, 0.86);
+        backdrop-filter: blur(14px);
       }
 
       .bar,
@@ -89,8 +94,9 @@
         height: 40px;
         place-items: center;
         border-radius: 8px;
-        background: var(--teal);
+        background: linear-gradient(135deg, var(--teal), #10b981);
         color: white;
+        box-shadow: 0 14px 28px rgba(15, 118, 110, 0.2);
       }
 
       .actions {
@@ -114,8 +120,9 @@
 
       .button.primary {
         border-color: var(--teal);
-        background: var(--teal);
+        background: linear-gradient(135deg, var(--teal), #10b981);
         color: white;
+        box-shadow: 0 12px 28px rgba(15, 118, 110, 0.18);
       }
 
       .hero {
@@ -127,7 +134,10 @@
       }
 
       .hero-wrap {
-        background: var(--bg);
+        background:
+          linear-gradient(135deg, rgba(20, 184, 166, 0.16), transparent 42%),
+          linear-gradient(225deg, rgba(245, 158, 11, 0.16), transparent 34%),
+          var(--bg);
         border-bottom: 1px solid var(--line);
       }
 
@@ -182,7 +192,7 @@
 
       .panel {
         padding: 22px;
-        box-shadow: 0 16px 45px rgba(15, 23, 42, 0.08);
+        box-shadow: var(--shadow);
       }
 
       .panel-head {
@@ -303,7 +313,7 @@
         <section class="hero">
           <div>
             <p class="eyebrow">Projet Laravel portfolio</p>
-            <h1>Visite un bien sans te laisser embarquer par le coup de cœur.</h1>
+            <h1>Aime le bien si tu veux. Décide avec les preuves.</h1>
             <p class="lead">
               ImmoRadar aide à comparer des biens immobiliers, préparer une checklist de visite, estimer le coût réel
               mensuel et repérer les alertes avant une offre.

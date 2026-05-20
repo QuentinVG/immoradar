@@ -16,6 +16,6 @@ class ExampleTest extends TestCase
 
         $response
             ->assertOk()
-            ->assertSee('Visite un bien sans te laisser embarquer');
+            ->assertSee('Aime le bien si tu veux. Décide avec les preuves.');
     }
 }
