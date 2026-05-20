@@ -11,6 +11,7 @@ use App\Services\ProjectSummaryService;
 use App\Services\PropertyAlertService;
 use App\Services\PropertyCostCalculator;
 use App\Services\PropertyDueDiligenceService;
+use App\Services\PropertyOfferReadinessService;
 use App\Services\PropertyScoringService;
 use App\Services\PropertyVerdictService;
 use Illuminate\Http\RedirectResponse;
@@ -59,6 +60,7 @@ class PropertyController extends Controller
         PropertyVerdictService $verdictService,
         PropertyAlertService $alertService,
         PropertyDueDiligenceService $dueDiligenceService,
+        PropertyOfferReadinessService $offerReadinessService,
     ): View {
         $this->guardProperty($project, $property);
         $alertService->refresh($property);
@@ -76,6 +78,7 @@ class PropertyController extends Controller
             'answeredQuestions' => $answeredQuestions,
             'activeQuestions' => $activeQuestions,
             'dueDiligence' => $dueDiligenceService->review($property),
+            'offerReadiness' => $offerReadinessService->review($property),
         ]);
     }
 

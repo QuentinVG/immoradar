@@ -8,6 +8,7 @@ use App\Models\PropertyChecklistAnswer;
 use App\Models\VisitChecklistQuestion;
 use App\Services\ProjectSummaryService;
 use App\Services\PropertyAlertService;
+use App\Services\PropertyOfferReadinessService;
 use App\Services\PropertyScoringService;
 use App\Services\PropertyVerdictService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -111,5 +112,49 @@ class DecisionServicesTest extends TestCase
         $this->assertArrayHasKey('decision_readiness', $summary);
         $this->assertSame('Trop tôt pour décider', $summary['decision_readiness']['label']);
         $this->assertNotEmpty($summary['decision_readiness']['actions']);
+    }
+
+    public function test_offer_readiness_blocks_offer_when_documents_are_missing(): void
+    {
+        $property = Property::factory()->create();
+
+        $review = app(PropertyOfferReadinessService::class)->review($property);
+
+        $this->assertSame('À sécuriser avant offre', $review['label']);
+        $this->assertContains('Documents avant offre incomplets', $review['blockers']);
+        $this->assertSame('faible', $review['proof_level']);
+    }
+
+    public function test_offer_readiness_can_mark_a_well_documented_property_ready(): void
+    {
+        $property = Property::factory()->create([
+            'property_type' => 'appartement',
+            'transaction_type' => 'achat',
+            'estimated_work_cost' => 0,
+        ]);
+
+        foreach ([
+            'Le dossier de diagnostics est-il disponible ?',
+            'En copropriété, les PV d’AG et travaux votés ont-ils été consultés ?',
+        ] as $questionText) {
+            $question = VisitChecklistQuestion::create([
+                'category' => 'Documents',
+                'question' => $questionText,
+                'weight' => 2,
+                'is_active' => true,
+            ]);
+
+            PropertyChecklistAnswer::create([
+                'property_id' => $property->id,
+                'visit_checklist_question_id' => $question->id,
+                'answer' => 'yes',
+            ]);
+        }
+
+        $review = app(PropertyOfferReadinessService::class)->review($property);
+
+        $this->assertSame('Prêt pour offre', $review['label']);
+        $this->assertSame('solide', $review['proof_level']);
+        $this->assertEmpty($review['blockers']);
     }
 }

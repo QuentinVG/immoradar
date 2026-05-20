@@ -49,6 +49,58 @@
         </section>
 
         <section class="ir-panel p-6">
+            @php
+                $offerClasses = match ($offerReadiness['label']) {
+                    'Prêt pour offre' => 'border-teal-200 bg-teal-50 text-teal-950',
+                    'À sécuriser avant offre' => 'border-amber-200 bg-amber-50 text-amber-950',
+                    default => 'border-red-200 bg-red-50 text-red-950',
+                };
+            @endphp
+            <div class="rounded-xl border p-5 {{ $offerClasses }}">
+                <div class="flex flex-wrap items-start justify-between gap-4">
+                    <div>
+                        <p class="text-sm font-black uppercase">Prêt pour offre ?</p>
+                        <h2 class="mt-2 text-3xl font-black">{{ $offerReadiness['label'] }}</h2>
+                        <p class="mt-2 max-w-3xl text-sm leading-6">{{ $offerReadiness['summary'] }}</p>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-4xl font-black">{{ $offerReadiness['score'] }}/100</p>
+                        <p class="mt-1 text-sm font-semibold">Niveau de preuve : {{ $offerReadiness['proof_level'] }}</p>
+                    </div>
+                </div>
+
+                <div class="mt-5 grid gap-4 lg:grid-cols-3">
+                    <div class="rounded-lg bg-white/70 p-4">
+                        <h3 class="font-black text-slate-950">Bloquants</h3>
+                        <ul class="mt-2 space-y-1 text-sm text-slate-700">
+                            @forelse($offerReadiness['blockers'] as $blocker)
+                                <li>{{ $blocker }}</li>
+                            @empty
+                                <li>Aucun bloquant majeur détecté.</li>
+                            @endforelse
+                        </ul>
+                    </div>
+                    <div class="rounded-lg bg-white/70 p-4">
+                        <h3 class="font-black text-slate-950">À faire avant offre</h3>
+                        <ul class="mt-2 space-y-1 text-sm text-slate-700">
+                            @foreach($offerReadiness['next_actions'] as $action)
+                                <li>{{ $action }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                    <div class="rounded-lg bg-white/70 p-4">
+                        <h3 class="font-black text-slate-950">Conditions à prévoir</h3>
+                        <ul class="mt-2 space-y-1 text-sm text-slate-700">
+                            @foreach($offerReadiness['conditions'] as $condition)
+                                <li>{{ $condition }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="ir-panel p-6">
             <div class="flex flex-wrap items-start justify-between gap-4">
                 <div>
                     <p class="text-sm font-black uppercase text-slate-500">{{ $cost['is_partial'] ? 'Coût partiel estimé' : 'Coût réel estimé' }}</p>
