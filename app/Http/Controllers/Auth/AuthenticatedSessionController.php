@@ -31,6 +31,21 @@ class AuthenticatedSessionController extends Controller
         return redirect()->intended(route('dashboard', absolute: false));
     }
 
+    public function demo(Request $request): RedirectResponse
+    {
+        abort_unless(config('app.demo_login_enabled'), 404);
+
+        if (! Auth::attempt(['email' => 'demo@immoradar.test', 'password' => 'password'], true)) {
+            return redirect()
+                ->route('login')
+                ->with('status', 'Compte démo indisponible. Lance les seeders avant de réessayer.');
+        }
+
+        $request->session()->regenerate();
+
+        return redirect()->intended(route('projects.index', absolute: false));
+    }
+
     /**
      * Destroy an authenticated session.
      */

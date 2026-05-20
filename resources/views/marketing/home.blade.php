@@ -52,7 +52,14 @@
                         </p>
                         <div class="mt-8 flex flex-wrap gap-3">
                             <a href="{{ route('register') }}" class="ir-action-primary">Créer mon espace</a>
-                            <a href="{{ route('login') }}" class="ir-action-secondary">Tester le compte démo</a>
+                            @if(config('app.demo_login_enabled'))
+                                <form method="POST" action="{{ route('login.demo') }}">
+                                    @csrf
+                                    <button type="submit" class="ir-action-secondary">Tester le compte démo</button>
+                                </form>
+                            @else
+                                <a href="{{ route('login') }}" class="ir-action-secondary">Connexion</a>
+                            @endif
                         </div>
                         <dl class="mt-8 grid max-w-2xl gap-3 sm:grid-cols-3">
                             <div class="rounded-lg border border-teal-100 bg-white p-4">
@@ -139,6 +146,27 @@
                             <p class="mt-2 text-sm leading-6 text-slate-600">Scores expliqués, alertes, comparaison, rapport PDF.</p>
                         </article>
                     </div>
+                </div>
+            </section>
+
+            <section class="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+                <div class="max-w-3xl">
+                    <p class="text-sm font-black uppercase text-teal-700">Guides utiles</p>
+                    <h2 class="mt-2 text-3xl font-black text-slate-950">Des pages publiques pour répondre aux vraies questions avant une offre.</h2>
+                </div>
+                <div class="mt-8 grid gap-4 md:grid-cols-3">
+                    <a href="{{ url('/guides/checklist-visite-immobiliere') }}" class="ir-panel bg-white p-5 transition hover:border-teal-300">
+                        <h3 class="font-black text-slate-950">Checklist visite immobilière</h3>
+                        <p class="mt-2 text-sm leading-6 text-slate-600">Quartier, intérieur, technique, budget et ressenti à vérifier.</p>
+                    </a>
+                    <a href="{{ url('/guides/cout-reel-mensuel-immobilier') }}" class="ir-panel bg-white p-5 transition hover:border-teal-300">
+                        <h3 class="font-black text-slate-950">Coût réel mensuel</h3>
+                        <p class="mt-2 text-sm leading-6 text-slate-600">Crédit, charges, taxe, énergie, assurance et travaux.</p>
+                    </a>
+                    <a href="{{ url('/guides/comparer-biens-immobiliers') }}" class="ir-panel bg-white p-5 transition hover:border-teal-300">
+                        <h3 class="font-black text-slate-950">Comparer plusieurs biens</h3>
+                        <p class="mt-2 text-sm leading-6 text-slate-600">Séparer envie, budget, risques et informations manquantes.</p>
+                    </a>
                 </div>
             </section>
 

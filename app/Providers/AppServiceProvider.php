@@ -28,5 +28,12 @@ class AppServiceProvider extends ServiceProvider
                 Limit::perHour(12)->by($request->ip()),
             ];
         });
+
+        RateLimiter::for('demo-login', function (Request $request) {
+            return [
+                Limit::perMinute(10)->by($request->ip()),
+                Limit::perHour(60)->by($request->ip()),
+            ];
+        });
     }
 }

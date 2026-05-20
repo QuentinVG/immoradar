@@ -56,6 +56,8 @@ return [
 
     'registration_access_code' => env('REGISTRATION_ACCESS_CODE'),
 
+    'demo_login_enabled' => env('DEMO_LOGIN_ENABLED', true),
+
     /*
     |--------------------------------------------------------------------------
     | Application Timezone

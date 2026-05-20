@@ -4,8 +4,19 @@
     <div class="mb-6">
         <p class="text-sm font-black uppercase text-teal-700">Connexion</p>
         <h1 class="mt-2 text-2xl font-black text-slate-950">Retour à tes comparaisons.</h1>
-        <p class="mt-2 text-sm leading-6 text-slate-600">Compte démo : <strong>demo@immoradar.test</strong> / <strong>password</strong>.</p>
+        <p class="mt-2 text-sm leading-6 text-slate-600">Tu peux te connecter à ton compte ou ouvrir une démo en lecture seule.</p>
     </div>
+
+    @if(config('app.demo_login_enabled'))
+        <form method="POST" action="{{ route('login.demo') }}" class="mb-6 rounded-lg border border-teal-100 bg-teal-50 p-4">
+            @csrf
+            <p class="text-sm font-black text-teal-950">Démo portfolio</p>
+            <p class="mt-1 text-sm leading-6 text-teal-900">Ouvre un projet déjà rempli, sans pouvoir modifier les données.</p>
+            <x-primary-button class="mt-3">
+                Ouvrir la démo
+            </x-primary-button>
+        </form>
+    @endif
 
     <form method="POST" action="{{ route('login') }}" class="space-y-4">
         @csrf

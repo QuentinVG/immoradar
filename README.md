@@ -55,7 +55,10 @@ Les calculs financiers sont volontairement affichés comme indicatifs.
 - Rapport PDF par bien.
 - Rapport PDF comparatif du projet.
 - Données de démonstration réalistes.
+- Connexion démo en un clic, avec compte de démonstration en lecture seule.
 - Page publique SEO avec meta description, canonical, JSON-LD, sitemap et robots.txt.
+- Guides publics SEO : checklist visite, coût réel mensuel, comparaison de biens.
+- Dockerfile cloud-ready et blueprint Render pour une démo gratuite.
 
 ## Stack Technique
 
@@ -179,6 +182,10 @@ La V2 ajoute une vraie page publique sur `/`, au lieu de rediriger directement v
 - JSON-LD `SoftwareApplication` ;
 - route `/sitemap.xml` ;
 - route `/robots.txt`.
+- pages guides publiques :
+  - `/guides/checklist-visite-immobiliere`
+  - `/guides/cout-reel-mensuel-immobilier`
+  - `/guides/comparer-biens-immobiliers`
 
 Les pages privées de l'application restent derrière authentification et les layouts app/auth incluent `noindex, nofollow`. L'objectif est clair : indexer la présentation publique, pas les données utilisateur.
 
@@ -200,13 +207,21 @@ Pour utiliser l'application complète, lance-la localement ou déploie-la sur un
 
 La checklist de déploiement est disponible dans [`docs/DEPLOYMENT.md`](docs/DEPLOYMENT.md).
 
+Chemin le moins cher :
+
+- Render Free pour une démo portfolio temporaire, via `render.yaml` ;
+- Railway Hobby pour une app réellement utilisable à petit coût ;
+- Laravel Cloud si tu veux rester dans un environnement Laravel plus natif.
+
 À retenir avant mise en ligne :
 
 - `APP_DEBUG=false` ;
 - `REGISTRATION_ACCESS_CODE` obligatoire ;
+- `APP_KEY` générée avec `php artisan key:generate --show` ;
 - compte démo en lecture seule ;
 - base de données sauvegardée ;
-- hébergement compatible Laravel, par exemple Laravel Cloud, Railway ou VPS.
+- `APP_URL` configurée avec le vrai domaine ;
+- hébergement compatible Laravel, par exemple Render, Railway, Laravel Cloud ou VPS.
 
 Le seeder crée un projet :
 

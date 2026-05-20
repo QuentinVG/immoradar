@@ -3,8 +3,10 @@
 namespace Tests\Feature;
 
 use App\Models\Property;
+use App\Models\User;
 use App\Models\VisitChecklistQuestion;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Hash;
 use Tests\TestCase;
 
 class MainScreensTest extends TestCase
@@ -16,7 +18,12 @@ class MainScreensTest extends TestCase
         $this->get('/')
             ->assertOk()
             ->assertSee('Visite un bien sans te laisser embarquer')
+            ->assertSee('/guides/checklist-visite-immobiliere')
             ->assertSee('SoftwareApplication');
+
+        $this->get('/guides/checklist-visite-immobiliere')
+            ->assertOk()
+            ->assertSee('Checklist visite immobilière');
 
         $this->get('/robots.txt')
             ->assertOk()
@@ -24,7 +31,21 @@ class MainScreensTest extends TestCase
 
         $this->get('/sitemap.xml')
             ->assertOk()
+            ->assertSee('/guides/cout-reel-mensuel-immobilier')
             ->assertSee('<urlset', false);
+    }
+
+    public function test_demo_login_redirects_to_projects_when_demo_user_exists(): void
+    {
+        User::factory()->create([
+            'email' => 'demo@immoradar.test',
+            'password' => Hash::make('password'),
+        ]);
+
+        $this->post(route('login.demo'))
+            ->assertRedirect(route('projects.index', absolute: false));
+
+        $this->assertAuthenticated();
     }
 
     public function test_main_authenticated_screens_render(): void
