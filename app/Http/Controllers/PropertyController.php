@@ -10,6 +10,7 @@ use App\Models\VisitChecklistQuestion;
 use App\Services\ProjectSummaryService;
 use App\Services\PropertyAlertService;
 use App\Services\PropertyCostCalculator;
+use App\Services\PropertyDueDiligenceService;
 use App\Services\PropertyScoringService;
 use App\Services\PropertyVerdictService;
 use Illuminate\Http\RedirectResponse;
@@ -57,6 +58,7 @@ class PropertyController extends Controller
         PropertyScoringService $scoringService,
         PropertyVerdictService $verdictService,
         PropertyAlertService $alertService,
+        PropertyDueDiligenceService $dueDiligenceService,
     ): View {
         $this->guardProperty($project, $property);
         $alertService->refresh($property);
@@ -73,6 +75,7 @@ class PropertyController extends Controller
             'checklistProgress' => $activeQuestions > 0 ? (int) round(($answeredQuestions / $activeQuestions) * 100) : 0,
             'answeredQuestions' => $answeredQuestions,
             'activeQuestions' => $activeQuestions,
+            'dueDiligence' => $dueDiligenceService->review($property),
         ]);
     }
 

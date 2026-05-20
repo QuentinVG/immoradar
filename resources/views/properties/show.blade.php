@@ -120,6 +120,45 @@
             </div>
         </section>
 
+        <section class="ir-panel p-6">
+            <div class="flex flex-wrap items-start justify-between gap-4">
+                <div>
+                    <p class="text-sm font-black uppercase text-teal-700">Revue avant offre</p>
+                    <h2 class="mt-1 text-2xl font-black text-slate-950">Documents et points à confirmer</h2>
+                    <p class="mt-2 max-w-3xl text-sm leading-6 text-slate-600">Cette liste évite de décider uniquement sur la visite. Elle reprend les documents qui peuvent changer le budget, les travaux ou le risque juridique.</p>
+                </div>
+                <a href="{{ route('projects.properties.visit', [$project, $property]) }}" class="ir-action-secondary">Mettre à jour</a>
+            </div>
+            <div class="mt-5 grid gap-3 md:grid-cols-2">
+                @foreach($dueDiligence as $item)
+                    @php
+                        $statusClasses = [
+                            'confirmed' => 'border-teal-200 bg-teal-50 text-teal-900',
+                            'missing' => 'border-red-200 bg-red-50 text-red-900',
+                            'unknown' => 'border-amber-200 bg-amber-50 text-amber-950',
+                            'not_applicable' => 'border-slate-200 bg-slate-50 text-slate-700',
+                        ];
+                        $statusLabels = [
+                            'confirmed' => 'confirmé',
+                            'missing' => 'manquant',
+                            'unknown' => 'à vérifier',
+                            'not_applicable' => 'non concerné',
+                        ];
+                    @endphp
+                    <article class="rounded-lg border p-4 {{ $statusClasses[$item['status']] ?? 'border-slate-200 bg-slate-50 text-slate-700' }}">
+                        <div class="flex items-start justify-between gap-3">
+                            <h3 class="font-black text-slate-950">{{ $item['label'] }}</h3>
+                            <span class="rounded-full bg-white/80 px-3 py-1 text-xs font-black">{{ $statusLabels[$item['status']] ?? $item['status'] }}</span>
+                        </div>
+                        <p class="mt-2 text-sm leading-6">{{ $item['why'] }}</p>
+                        @if($item['status'] !== 'confirmed' && $item['status'] !== 'not_applicable')
+                            <p class="mt-3 text-sm font-semibold">{{ $item['action'] }}</p>
+                        @endif
+                    </article>
+                @endforeach
+            </div>
+        </section>
+
         <section class="grid gap-4 lg:grid-cols-2">
             <div class="ir-panel p-6">
                 <h2 class="text-lg font-black text-slate-950">Prochaines actions</h2>

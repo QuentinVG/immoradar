@@ -6,7 +6,10 @@ use App\Models\Property;
 
 class PropertyScoringService
 {
-    public function __construct(private readonly PropertyCostCalculator $costCalculator) {}
+    public function __construct(
+        private readonly PropertyCostCalculator $costCalculator,
+        private readonly PropertyDueDiligenceService $dueDiligenceService,
+    ) {}
 
     /**
      * @return array<string, mixed>
@@ -208,8 +211,8 @@ class PropertyScoringService
             $reasons[] = '- points de visite à vérifier';
         }
 
-        $documentAnswersToConfirm = $property->checklistAnswers
-            ->filter(fn ($answer): bool => $answer->question?->category === 'Documents' && in_array($answer->answer, ['no', 'unknown'], true))
+        $documentAnswersToConfirm = collect($this->dueDiligenceService->missingItems($property))
+            ->where('status', '!=', 'not_applicable')
             ->count();
 
         if ($documentAnswersToConfirm > 0) {
