@@ -21,7 +21,10 @@
                     <span class="grid h-10 w-10 place-items-center rounded-lg bg-teal-700 text-white">IR</span>
                     <span>ImmoRadar</span>
                 </a>
-                <a href="{{ route('login') }}" class="ir-action-secondary">Connexion</a>
+                <div class="flex items-center gap-2">
+                    <a href="{{ route('marketing.example') }}" class="ir-action-primary">Voir un exemple</a>
+                    <a href="{{ route('marketing.trust') }}" class="ir-action-secondary hidden sm:inline-flex">Confidentialité</a>
+                </div>
             </div>
         </header>
 
@@ -45,13 +48,14 @@
                     <h2 class="text-2xl font-black text-amber-950">ImmoRadar sert à décider plus calmement.</h2>
                     <p class="mt-3 leading-7 text-amber-950">L'application ne remplace pas un professionnel. Elle aide à organiser les biens, préparer les visites, comparer les coûts et voir les alertes avant de trancher.</p>
                     <div class="mt-5 flex flex-wrap gap-3">
-                        <a href="{{ route('register') }}" class="ir-action-primary">Créer mon espace</a>
+                        <a href="{{ route('marketing.example') }}" class="ir-action-primary">Voir un exemple complet</a>
                         @if(config('app.demo_login_enabled'))
                             <form method="POST" action="{{ route('login.demo') }}">
                                 @csrf
                                 <button type="submit" class="ir-action-secondary">Ouvrir la démo</button>
                             </form>
                         @endif
+                        <a href="{{ route('marketing.trust') }}" class="ir-action-secondary">Confidentialité</a>
                     </div>
                 </section>
             </article>

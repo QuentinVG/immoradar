@@ -17,9 +17,20 @@ class MainScreensTest extends TestCase
     {
         $this->get('/')
             ->assertOk()
-            ->assertSee('Aime le bien si tu veux. Décide avec les preuves.')
+            ->assertSee('Comparer 2 à 5 biens avant offre')
+            ->assertSee('Tester la démo guidée')
             ->assertSee('/guides/checklist-visite-immobiliere')
             ->assertSee('SoftwareApplication');
+
+        $this->get('/exemple/maison-montoison')
+            ->assertOk()
+            ->assertSee('Exemple complet')
+            ->assertSee('Pourquoi ImmoRadar dit : à sécuriser');
+
+        $this->get('/confiance')
+            ->assertOk()
+            ->assertSee('Confidentialité et limites')
+            ->assertSee('Aucune connexion bancaire');
 
         $this->get('/guides/checklist-visite-immobiliere')
             ->assertOk()
@@ -35,6 +46,8 @@ class MainScreensTest extends TestCase
 
         $this->get('/sitemap.xml')
             ->assertOk()
+            ->assertSee('/exemple/maison-montoison')
+            ->assertSee('/confiance')
             ->assertSee('/guides/cout-reel-mensuel-immobilier')
             ->assertSee('/guides/documents-achat-immobilier')
             ->assertSee('<urlset', false);
@@ -51,6 +64,16 @@ class MainScreensTest extends TestCase
             ->assertRedirect(route('projects.index', absolute: false));
 
         $this->assertAuthenticated();
+    }
+
+    public function test_public_homepage_has_account_fallback_when_demo_is_disabled(): void
+    {
+        config(['app.demo_login_enabled' => false]);
+
+        $this->get('/')
+            ->assertOk()
+            ->assertSee('Créer un espace')
+            ->assertDontSee('Tester la démo guidée');
     }
 
     public function test_main_authenticated_screens_render(): void

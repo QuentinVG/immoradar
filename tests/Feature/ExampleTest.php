@@ -16,6 +16,6 @@ class ExampleTest extends TestCase
 
         $response
             ->assertOk()
-            ->assertSee('Aime le bien si tu veux. Décide avec les preuves.');
+            ->assertSee('Comparer 2 à 5 biens avant offre');
     }
 }

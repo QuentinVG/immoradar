@@ -3,18 +3,18 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>ImmoRadar - Checklist visite et comparaison immobilière</title>
+    <title>ImmoRadar - rapport avant offre immobilier</title>
     <meta
       name="description"
-      content="ImmoRadar aide à comparer des biens immobiliers, préparer une checklist de visite, estimer le coût réel mensuel et repérer les alertes avant une offre."
+      content="ImmoRadar aide les acheteurs à comparer 2 à 5 biens avant offre, estimer le coût réel mensuel et repérer les documents ou risques à sécuriser."
     />
     <link rel="canonical" href="https://quentinvg.github.io/immoradar/" />
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="fr_FR" />
-    <meta property="og:title" content="ImmoRadar - Assistant de visite immobilière" />
+    <meta property="og:title" content="ImmoRadar - rapport avant offre immobilier" />
     <meta
       property="og:description"
-      content="Checklist visite, coût réel mensuel, alertes et comparaison de biens pour décider plus calmement."
+      content="Coût réel, risques, documents manquants et comparaison de biens avant offre."
     />
     <meta property="og:url" content="https://quentinvg.github.io/immoradar/" />
     <script type="application/ld+json">
@@ -24,7 +24,7 @@
         "name": "ImmoRadar",
         "applicationCategory": "FinanceApplication",
         "operatingSystem": "Web",
-        "description": "Assistant de visite immobilière pour comparer des biens, estimer le coût réel mensuel et repérer les alertes avant une offre."
+        "description": "Rapport avant offre pour comparer des biens, estimer le coût réel mensuel et repérer les alertes avant achat."
       }
     </script>
     <style>
@@ -302,8 +302,8 @@
           <span>ImmoRadar</span>
         </a>
         <div class="actions">
-          <a class="button" href="https://github.com/QuentinVG/immoradar">GitHub</a>
-          <a class="button primary hide-small" href="https://quentinvg.github.io/portfolio/">Portfolio</a>
+          <a class="button primary" href="#exemple">Voir l'exemple</a>
+          <a class="button hide-small" href="#confiance">Confidentialité</a>
         </div>
       </div>
     </header>
@@ -312,26 +312,26 @@
       <main>
         <section class="hero">
           <div>
-            <p class="eyebrow">Projet Laravel portfolio</p>
-            <h1>Aime le bien si tu veux. Décide avec les preuves.</h1>
+            <p class="eyebrow">Comparer 2 à 5 biens avant offre</p>
+            <h1>Le rapport d'achat qui refroidit le coup de coeur avant de signer.</h1>
             <p class="lead">
-              ImmoRadar aide à comparer des biens immobiliers, préparer une checklist de visite, estimer le coût réel
-              mensuel et repérer les alertes avant une offre.
+              ImmoRadar aide à transformer une visite immobilière en dossier de décision : coût réel mensuel,
+              risques DPE/travaux/charges, documents manquants et questions à poser avant une offre.
             </p>
             <div class="actions">
-              <a class="button primary" href="https://github.com/QuentinVG/immoradar">Voir le dépôt GitHub</a>
-              <a class="button" href="https://quentinvg.github.io/portfolio/">Retour portfolio</a>
+              <a class="button primary" href="#exemple">Inspecter l'exemple Maison Montoison</a>
+              <a class="button" href="#confiance">Voir les limites</a>
             </div>
             <p class="note">
-              GitHub Pages affiche cette page statique. L'application complète est une app Laravel avec auth, base de
-              données, sessions et PDF : elle doit être lancée localement ou déployée sur un hébergement compatible PHP.
+              GitHub Pages affiche une vitrine statique. L'application complète ajoute auth, base de données, visites,
+              comparaison et rapports PDF sur un hébergement Laravel.
             </p>
           </div>
 
-          <aside class="panel" aria-label="Aperçu des informations affichées par ImmoRadar">
+          <aside id="exemple" class="panel" aria-label="Aperçu des informations affichées par ImmoRadar">
             <div class="panel-head">
               <div>
-                <p class="eyebrow">Exemple de synthèse</p>
+                <p class="eyebrow">Données de démonstration</p>
                 <h2>Maison Montoison</h2>
               </div>
               <span class="badge">à sécuriser</span>
@@ -369,18 +369,22 @@
     <main>
       <section class="grid" aria-label="Fonctionnalités principales">
         <article class="card">
-          <h3>Simple pour l'utilisateur</h3>
-          <p>Projet, biens, checklist, coût réel, verdict. Pas d'import magique, pas de scraping, pas d'IA.</p>
+          <h3>Rapport avant offre</h3>
+          <p>Projet, biens, checklist, coût réel, documents, vigilance et verdict avant offre.</p>
         </article>
         <article class="card">
-          <h3>Solide techniquement</h3>
-          <p>Laravel, Breeze, policies, requests, services métier, tests, Pint, Larastan, CI et Docker.</p>
+          <h3>Questions à poser</h3>
+          <p>Charges exactes, taxe foncière, travaux votés, DPE, audit énergétique et points de négociation.</p>
         </article>
-        <article class="card">
-          <h3>Présentable en portfolio</h3>
-          <p>README complet, seeders de démonstration, rapport PDF, page SEO publique et audit documenté.</p>
+        <article id="confiance" class="card">
+          <h3>Confidentialité et limites</h3>
+          <p>Aucune connexion bancaire, aucune annonce aspirée. Les calculs sont indicatifs et doivent être confirmés par un professionnel.</p>
         </article>
       </section>
+      <p class="note">
+        Le code source reste disponible pour audit technique sur
+        <a href="https://github.com/QuentinVG/immoradar">GitHub</a>.
+      </p>
     </main>
   </body>
 </html>

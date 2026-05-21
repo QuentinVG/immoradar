@@ -67,6 +67,12 @@ Route::get('/', function () {
         : view('marketing.home');
 })->name('marketing.home');
 
+Route::get('/exemple/maison-montoison', fn () => view('marketing.example'))
+    ->name('marketing.example');
+
+Route::get('/confiance', fn () => view('marketing.trust'))
+    ->name('marketing.trust');
+
 foreach ($marketingPages as $slug => $page) {
     Route::get('/guides/'.$slug, fn () => view('marketing.page', [
         'page' => $page,
@@ -88,23 +94,22 @@ Route::get('/robots.txt', function () {
 
 Route::get('/sitemap.xml', function () {
     $url = e(rtrim(config('app.url'), '/'));
-    $guideUrls = collect([
-        'checklist-visite-immobiliere',
-        'cout-reel-mensuel-immobilier',
-        'comparer-biens-immobiliers',
-        'documents-achat-immobilier',
-    ])->map(fn (string $slug): string => "  <url>\n    <loc>{$url}/guides/{$slug}</loc>\n    <priority>0.8</priority>\n  </url>")
+    $publicUrls = collect([
+        ['path' => '/', 'priority' => '1.0'],
+        ['path' => '/exemple/maison-montoison', 'priority' => '0.9'],
+        ['path' => '/confiance', 'priority' => '0.8'],
+        ['path' => '/guides/checklist-visite-immobiliere', 'priority' => '0.8'],
+        ['path' => '/guides/cout-reel-mensuel-immobilier', 'priority' => '0.8'],
+        ['path' => '/guides/comparer-biens-immobiliers', 'priority' => '0.8'],
+        ['path' => '/guides/documents-achat-immobilier', 'priority' => '0.8'],
+    ])->map(fn (array $page): string => "  <url>\n    <loc>{$url}{$page['path']}</loc>\n    <lastmod>2026-05-21</lastmod>\n    <priority>{$page['priority']}</priority>\n  </url>")
         ->implode("\n");
 
     return response(
         <<<XML
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>{$url}/</loc>
-    <priority>1.0</priority>
-  </url>
-{$guideUrls}
+{$publicUrls}
 </urlset>
 XML,
         200,
