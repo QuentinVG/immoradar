@@ -84,8 +84,9 @@
                         <li>Comparaison incomplète avec deux alternatives.</li>
                     </ul>
                 </article>
-                <article class="ir-panel p-5">
-                    <p class="text-sm font-black uppercase text-teal-700">Prochaine action</p>
+                <article class="ir-panel border-teal-200 bg-teal-50/70 p-5">
+                    <p class="text-sm font-black uppercase text-teal-700">Action prioritaire</p>
+                    <p class="mt-3 text-lg font-black text-slate-950">Obtenir les preuves avant de négocier.</p>
                     <ul class="mt-3 space-y-2 text-sm leading-6 text-slate-700">
                         <li>Demander diagnostics et audit énergétique si nécessaire.</li>
                         <li>Revenir 24 h après visite avec ressenti à froid.</li>

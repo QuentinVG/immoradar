@@ -67,6 +67,23 @@
                             <a href="{{ route('marketing.example') }}" class="ir-action-secondary">Inspecter l'exemple complet</a>
                             <a href="{{ route('marketing.trust') }}" class="ir-action-secondary">Confidentialité</a>
                         </div>
+                        <div class="mt-6 max-w-2xl rounded-lg border border-teal-200 bg-white/85 p-4 shadow-sm shadow-teal-900/5">
+                            <p class="text-sm font-black uppercase text-teal-700">Diagnostic rapide</p>
+                            <div class="mt-3 grid gap-3 sm:grid-cols-3">
+                                <div>
+                                    <p class="font-black text-slate-950">Si tu as une visite demain</p>
+                                    <p class="mt-1 text-sm leading-6 text-slate-600">Prends la checklist mobile et note seulement les points critiques.</p>
+                                </div>
+                                <div>
+                                    <p class="font-black text-slate-950">Si tu hésites</p>
+                                    <p class="mt-1 text-sm leading-6 text-slate-600">Compare coût mensuel, trajet, DPE et documents manquants.</p>
+                                </div>
+                                <div>
+                                    <p class="font-black text-slate-950">Si tu veux offrir</p>
+                                    <p class="mt-1 text-sm leading-6 text-slate-600">Vérifie les preuves avant de parler prix ou compromis.</p>
+                                </div>
+                            </div>
+                        </div>
                         <dl class="mt-8 grid max-w-2xl gap-3 sm:grid-cols-3">
                             <div class="rounded-lg border border-teal-100 bg-white p-4">
                                 <dt class="text-xs font-black uppercase text-slate-500">Entrée rapide</dt>

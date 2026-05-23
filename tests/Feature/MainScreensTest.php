@@ -18,6 +18,8 @@ class MainScreensTest extends TestCase
         $this->get('/')
             ->assertOk()
             ->assertSee('Comparer 2 à 5 biens avant offre')
+            ->assertSee('Diagnostic rapide')
+            ->assertSee('Si tu as une visite demain')
             ->assertSee('Tester la démo guidée')
             ->assertSee('/guides/checklist-visite-immobiliere')
             ->assertSee('SoftwareApplication');
@@ -25,7 +27,8 @@ class MainScreensTest extends TestCase
         $this->get('/exemple/maison-montoison')
             ->assertOk()
             ->assertSee('Exemple complet')
-            ->assertSee('Pourquoi ImmoRadar dit : à sécuriser');
+            ->assertSee('Pourquoi ImmoRadar dit : à sécuriser')
+            ->assertSee('Action prioritaire');
 
         $this->get('/confiance')
             ->assertOk()
@@ -90,7 +93,9 @@ class MainScreensTest extends TestCase
         $user = $property->project->user;
 
         $this->actingAs($user)->get(route('projects.index'))->assertOk();
-        $this->actingAs($user)->get(route('projects.show', $property->project))->assertOk();
+        $this->actingAs($user)->get(route('projects.show', $property->project))
+            ->assertOk()
+            ->assertSee('Plan d’action');
         $this->actingAs($user)->get(route('projects.properties.index', $property->project))->assertOk();
         $this->actingAs($user)->get(route('projects.properties.show', [$property->project, $property]))
             ->assertOk()

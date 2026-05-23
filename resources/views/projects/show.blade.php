@@ -65,6 +65,34 @@
             </div>
         </section>
 
+        <section class="ir-panel p-5">
+            <div class="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
+                <div>
+                    <p class="text-sm font-black uppercase text-teal-700">Plan d’action</p>
+                    <h2 class="mt-1 text-2xl font-black text-slate-950">La prochaine étape utile, sans relire tout le dossier.</h2>
+                </div>
+                <a href="{{ route('projects.properties.create', $project) }}" class="ir-action-primary">Ajouter un bien à comparer</a>
+            </div>
+            <div class="mt-5 grid gap-3 md:grid-cols-3">
+                <article class="rounded-lg border border-amber-200 bg-amber-50 p-4">
+                    <p class="text-xs font-black uppercase text-amber-800">Maintenant</p>
+                    <p class="mt-2 font-black text-slate-950">{{ $summary['decision_readiness']['actions'][0] ?? 'Compléter les informations qui manquent avant de trancher.' }}</p>
+                </article>
+                <article class="rounded-lg border border-teal-200 bg-teal-50 p-4">
+                    <p class="text-xs font-black uppercase text-teal-700">Comparer</p>
+                    <p class="mt-2 text-sm leading-6 text-slate-700">Garde 2 ou 3 biens actifs pour éviter qu’un seul coup de cœur décide tout.</p>
+                    <a href="{{ route('projects.compare', $project) }}" class="mt-3 inline-flex text-sm font-black text-teal-800">Ouvrir la comparaison</a>
+                </article>
+                <article class="rounded-lg border border-rose-200 bg-rose-50 p-4">
+                    <p class="text-xs font-black uppercase text-rose-700">Sécuriser</p>
+                    <p class="mt-2 text-sm leading-6 text-slate-700">Passe en mode visite sur le bien favori, puis transforme les inconnues en questions au vendeur.</p>
+                    @if($summary['best_property'])
+                        <a href="{{ route('projects.properties.visit', [$project, $summary['best_property']['property']]) }}" class="mt-3 inline-flex text-sm font-black text-rose-800">Continuer la checklist</a>
+                    @endif
+                </article>
+            </div>
+        </section>
+
         <section class="grid gap-4 lg:grid-cols-2">
             <div class="ir-panel border-teal-200 bg-teal-50/70 p-6">
                 <p class="text-sm font-black uppercase text-teal-700">Meilleur choix actuel</p>
