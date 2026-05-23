@@ -11,18 +11,18 @@ use App\Services\PropertyScoringService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Illuminate\View\View;
 
 class VisitChecklistController extends Controller
 {
-    public function edit(Project $project, Property $property, PropertyScoringService $scoringService): View
+    public function edit(Request $request, Project $project, Property $property, PropertyScoringService $scoringService): View
     {
         $this->guardProperty($project, $property);
 
-        $questions = VisitChecklistQuestion::query()
-            ->where('is_active', true)
-            ->orderBy('id')
-            ->get()
+        $visitMode = $this->visitMode($request);
+        $visibleQuestions = $this->visibleQuestions($visitMode);
+        $questions = $visibleQuestions
             ->groupBy('category')
             ->sortBy(function ($items, string $category): int {
                 $position = array_search($category, $this->categoryOrder(), true);
@@ -31,15 +31,18 @@ class VisitChecklistController extends Controller
             });
 
         $answers = $property->checklistAnswers()->get()->keyBy('visit_checklist_question_id');
-        $visitSummary = $this->visitSummary($property);
+        $visitSummary = $this->visitSummary($property, $visibleQuestions);
 
         return view('visit.edit', [
             'project' => $project,
             'property' => $property,
             'questions' => $questions,
+            'visibleQuestions' => $visibleQuestions,
             'answers' => $answers,
             'scores' => $scoringService->score($property),
             'visitSummary' => $visitSummary,
+            'visitMode' => $visitMode,
+            'visitModes' => $this->visitModes(),
         ]);
     }
 
@@ -56,7 +59,8 @@ class VisitChecklistController extends Controller
 
         $alertService->refresh($property);
 
-        return redirect()->route('projects.properties.visit', [$project, $property])->with('status', 'Checklist enregistrée.');
+        return redirect()->route('projects.properties.visit', [$project, $property, 'mode' => $this->visitMode($request)])
+            ->with('status', 'Checklist enregistrée.');
     }
 
     public function updateAnswer(
@@ -83,15 +87,14 @@ class VisitChecklistController extends Controller
 
         $property->load('checklistAnswers.question');
         $scores = $scoringService->score($property);
-        $totalQuestions = VisitChecklistQuestion::query()->where('is_active', true)->count();
-        $answeredCount = $property->checklistAnswers()->where('answer', '!=', 'unknown')->count();
-        $visitSummary = $this->visitSummary($property);
+        $visibleQuestions = $this->visibleQuestions($this->visitMode($request));
+        $visitSummary = $this->visitSummary($property, $visibleQuestions);
 
         return response()->json([
             'message' => 'Réponse enregistrée.',
-            'answered_count' => $answeredCount,
-            'total_questions' => $totalQuestions,
-            'progress' => $totalQuestions > 0 ? round(($answeredCount / $totalQuestions) * 100) : 0,
+            'answered_count' => $visitSummary['answered_count'],
+            'total_questions' => $visitSummary['total_questions'],
+            'progress' => $visitSummary['progress'],
             'compatibility' => $scores['compatibility']['score'],
             'vigilance' => $scores['vigilance']['score'],
             'risk_count' => $visitSummary['risk_count'],
@@ -129,21 +132,93 @@ class VisitChecklistController extends Controller
     }
 
     /**
-     * @return array{risk_count:int,unknown_count:int,critical_missing_count:int}
+     * @return Collection<int,VisitChecklistQuestion>
      */
-    private function visitSummary(Property $property): array
+    private function activeQuestions(): Collection
+    {
+        return VisitChecklistQuestion::query()
+            ->where('is_active', true)
+            ->orderBy('id')
+            ->get()
+            ->sortBy(function (VisitChecklistQuestion $question): int {
+                $position = array_search($question->category, $this->categoryOrder(), true);
+
+                return $position === false ? 99 : $position;
+            })
+            ->values();
+    }
+
+    /**
+     * @return Collection<int,VisitChecklistQuestion>
+     */
+    private function visibleQuestions(string $mode): Collection
+    {
+        $questions = $this->activeQuestions();
+
+        return match ($mode) {
+            'full' => $questions,
+            'standard' => $questions->take(18)->values(),
+            default => $this->expressQuestions($questions),
+        };
+    }
+
+    /**
+     * @param  Collection<int,VisitChecklistQuestion>  $questions
+     * @return Collection<int,VisitChecklistQuestion>
+     */
+    private function expressQuestions(Collection $questions): Collection
+    {
+        $priority = [
+            'Le trajet vers le travail est-il acceptable ?',
+            'La luminosité est-elle suffisante ?',
+            'L’isolation sonore semble-t-elle correcte ?',
+            'Y a-t-il des traces d’humidité ?',
+            'Y a-t-il des fissures inquiétantes ?',
+            'Les travaux semblent-ils maîtrisables ?',
+            'Le dossier de diagnostics est-il disponible ?',
+            'Est-ce que je me projette dans ce logement ?',
+        ];
+
+        $selected = $questions
+            ->filter(fn (VisitChecklistQuestion $question): bool => in_array($question->question, $priority, true))
+            ->values();
+
+        if ($selected->count() >= 8) {
+            return $selected->take(8)->values();
+        }
+
+        $selectedIds = $selected->pluck('id')->all();
+
+        return $selected
+            ->concat($questions->reject(fn (VisitChecklistQuestion $question): bool => in_array($question->id, $selectedIds, true))->take(8 - $selected->count()))
+            ->values();
+    }
+
+    /**
+     * @param  Collection<int,VisitChecklistQuestion>  $questions
+     * @return array{answered_count:int,total_questions:int,progress:int,risk_count:int,unknown_count:int,critical_missing_count:int}
+     */
+    private function visitSummary(Property $property, Collection $questions): array
     {
         $property->loadMissing('checklistAnswers.question');
+        $answers = $property->checklistAnswers->keyBy('visit_checklist_question_id');
+        $answeredCount = $questions
+            ->filter(fn (VisitChecklistQuestion $question): bool => ($answers->get($question->id)->answer ?? 'unknown') !== 'unknown')
+            ->count();
+        $totalQuestions = $questions->count();
 
         return [
-            'risk_count' => $property->checklistAnswers
-                ->filter(fn ($answer): bool => $answer->answer === 'no' && $answer->question?->category !== 'Ressenti')
+            'answered_count' => $answeredCount,
+            'total_questions' => $totalQuestions,
+            'progress' => $totalQuestions > 0 ? (int) round(($answeredCount / $totalQuestions) * 100) : 0,
+            'risk_count' => $questions
+                ->filter(fn (VisitChecklistQuestion $question): bool => ($answers->get($question->id)->answer ?? null) === 'no' && $question->category !== 'Ressenti')
                 ->count(),
-            'unknown_count' => $property->checklistAnswers
-                ->where('answer', 'unknown')
+            'unknown_count' => $questions
+                ->filter(fn (VisitChecklistQuestion $question): bool => ($answers->get($question->id)->answer ?? null) === 'unknown')
                 ->count(),
-            'critical_missing_count' => $property->checklistAnswers
-                ->filter(fn ($answer): bool => in_array($answer->answer, ['no', 'unknown'], true) && $answer->question !== null && $answer->question->weight >= 2)
+            'critical_missing_count' => $questions
+                ->filter(fn (VisitChecklistQuestion $question): bool => $question->weight >= 2 && ! in_array($answers->get($question->id)->answer ?? null, ['yes', 'not_applicable'], true))
                 ->count(),
         ];
     }
@@ -154,5 +229,24 @@ class VisitChecklistController extends Controller
     private function categoryOrder(): array
     {
         return ['Quartier', 'Immeuble / extérieur', 'Intérieur', 'Technique', 'Budget', 'Documents', 'Ressenti'];
+    }
+
+    /**
+     * @return array<string,array{label:string,description:string}>
+     */
+    private function visitModes(): array
+    {
+        return [
+            'express' => ['label' => 'Visite express', 'description' => '8 questions critiques'],
+            'standard' => ['label' => 'Visite standard', 'description' => 'les points importants'],
+            'full' => ['label' => 'Visite complète', 'description' => 'checklist complète'],
+        ];
+    }
+
+    private function visitMode(Request $request): string
+    {
+        $mode = (string) $request->query('mode', $request->input('mode', 'express'));
+
+        return array_key_exists($mode, $this->visitModes()) ? $mode : 'express';
     }
 }

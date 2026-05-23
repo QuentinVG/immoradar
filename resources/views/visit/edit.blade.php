@@ -12,15 +12,18 @@
 
     @php
         $isDemoAccount = auth()->user()?->isDemoAccount() ?? false;
-        $totalQuestions = $questions->flatten()->count();
-        $answeredCount = $answers->filter(fn ($answer) => $answer->answer !== 'unknown')->count();
-        $progress = $totalQuestions > 0 ? round(($answeredCount / $totalQuestions) * 100) : 0;
+        $totalQuestions = $visitSummary['total_questions'];
+        $answeredCount = $visitSummary['answered_count'];
+        $currentMode = $visitModes[$visitMode];
+        $openCriticalQuestions = $visibleQuestions
+            ->filter(fn ($question) => $question->weight >= 2 && ! in_array($answers->get($question->id)?->answer, ['yes', 'not_applicable'], true))
+            ->take(4);
     @endphp
 
     <div
         class="mx-auto max-w-3xl px-4 py-6 sm:px-6 lg:px-8"
         x-data="window.visitChecklist({
-            autosaveUrl: @js(route('projects.properties.visit.answer', [$project, $property])),
+            autosaveUrl: @js(route('projects.properties.visit.answer', [$project, $property, 'mode' => $visitMode])),
             csrfToken: @js(csrf_token()),
             demo: @js($isDemoAccount),
             initialAnswered: {{ $answeredCount }},
@@ -35,18 +38,39 @@
         @if(session('status'))
             <div class="mb-4 rounded-md border border-teal-200 bg-teal-50 p-4 text-sm font-semibold text-teal-900">{{ session('status') }}</div>
         @endif
+
         @if($isDemoAccount)
             <div class="mb-4 rounded-md border border-amber-200 bg-amber-50 p-4 text-sm font-semibold text-amber-950">
                 Compte démo en lecture seule : les clics changent l'affichage, mais ne modifient pas les données. Crée ton compte pour sauvegarder.
             </div>
         @endif
 
+        <section class="mb-4 rounded-lg border border-slate-200 bg-white p-4 shadow-sm shadow-slate-900/5">
+            <div class="flex flex-wrap items-center justify-between gap-3">
+                <div>
+                    <p class="text-sm font-black uppercase text-teal-700">{{ $currentMode['label'] }}</p>
+                    <h2 class="mt-1 text-xl font-black text-slate-950">{{ $totalQuestions }} questions</h2>
+                    <p class="mt-1 text-sm text-slate-600">{{ $currentMode['description'] }}. Bascule en plus complet si la visite laisse du temps.</p>
+                </div>
+                <div class="grid grid-cols-3 gap-1 rounded-lg border border-slate-200 bg-slate-50 p-1 text-xs font-black">
+                    @foreach($visitModes as $mode => $modeConfig)
+                        <a
+                            href="{{ route('projects.properties.visit', [$project, $property, 'mode' => $mode]) }}"
+                            class="rounded-md px-3 py-2 text-center transition {{ $visitMode === $mode ? 'bg-teal-700 text-white shadow-sm shadow-teal-900/20' : 'text-slate-700 hover:bg-white hover:text-teal-800' }}"
+                        >
+                            {{ str_replace('Visite ', '', $modeConfig['label']) }}
+                        </a>
+                    @endforeach
+                </div>
+            </div>
+        </section>
+
         <section class="mb-4 rounded-lg border border-teal-200 bg-gradient-to-br from-teal-50 to-emerald-50 p-4 shadow-sm shadow-teal-900/5">
             <p class="text-sm font-black uppercase text-teal-700">Pendant la visite</p>
             <ol class="mt-2 space-y-1 text-sm leading-6 text-teal-950">
-                <li>1. Réponds aux boutons sans chercher la perfection.</li>
-                <li>2. Mets “À vérifier” dès qu’une info dépend du vendeur ou d’un document.</li>
-                <li>3. Si tu réponds “Non” à un point critique, note quoi demander avant de partir.</li>
+                <li>1. Réponds aux boutons, pas à un questionnaire parfait.</li>
+                <li>2. Mets “À vérifier” dès qu'une info dépend du vendeur ou d'un document.</li>
+                <li>3. Ouvre une note uniquement si le point change vraiment la décision.</li>
             </ol>
         </section>
 
@@ -78,7 +102,19 @@
             </div>
         </div>
 
-        <form method="POST" action="{{ route('projects.properties.visit.update', [$project, $property]) }}" class="mt-6 space-y-6">
+        @if($openCriticalQuestions->isNotEmpty())
+            <section class="mt-4 rounded-lg border border-amber-200 bg-amber-50 p-4 text-sm text-amber-950 shadow-sm shadow-amber-900/5">
+                <p class="font-black uppercase text-amber-800">Avant de partir</p>
+                <p class="mt-1">Demande une preuve claire pour ces points avant de te fier au ressenti.</p>
+                <ul class="mt-3 space-y-2">
+                    @foreach($openCriticalQuestions as $question)
+                        <li class="rounded-md bg-white/70 p-2 font-semibold">{{ $question->question }}</li>
+                    @endforeach
+                </ul>
+            </section>
+        @endif
+
+        <form method="POST" action="{{ route('projects.properties.visit.update', [$project, $property, 'mode' => $visitMode]) }}" class="mt-6 space-y-6">
             @csrf
             @foreach($questions as $category => $categoryQuestions)
                 <section class="ir-panel p-4">
@@ -91,7 +127,7 @@
                             <p class="mt-1 text-sm text-slate-500">
                                 @switch($category)
                                     @case('Technique') Cherche les signaux qui peuvent coûter cher : humidité, fissures, électricité, chauffage. @break
-                                    @case('Documents') Ne fais pas d’offre solide sans preuves écrites. @break
+                                    @case('Documents') Ne fais pas d'offre solide sans preuves écrites. @break
                                     @case('Budget') Ces réponses fiabilisent le coût réel mensuel. @break
                                     @case('Ressenti') Réponds honnêtement, puis relis à froid après la visite. @break
                                     @default Réponds vite, ajoute une note seulement si quelque chose te marque.
@@ -100,7 +136,8 @@
                         </div>
                         <span class="rounded-full bg-slate-100 px-3 py-1 text-xs font-black text-slate-700">{{ $categoryAnswered }}/{{ $categoryQuestions->count() }}</span>
                     </div>
-                    <div class="mt-4 space-y-5">
+
+                    <div class="mt-4 space-y-4">
                         @foreach($categoryQuestions as $question)
                             @php($current = $answers->get($question->id))
                             <div class="rounded-lg border border-slate-200 bg-white p-4 shadow-sm shadow-slate-900/5" data-question="{{ $question->id }}">
@@ -121,7 +158,10 @@
                                         </label>
                                     @endforeach
                                 </div>
-                                <textarea name="answers[{{ $question->id }}][comment]" rows="2" placeholder="Note rapide pendant la visite" class="mt-3 block w-full rounded-md border-slate-300 text-sm focus:border-teal-600 focus:ring-teal-600" @input.debounce.900ms="save($el, {{ $question->id }})">{{ old('answers.'.$question->id.'.comment', $current?->comment) }}</textarea>
+                                <details class="mt-3" {{ filled($current?->comment) ? 'open' : '' }}>
+                                    <summary class="cursor-pointer text-sm font-black text-teal-800">Ajouter une note</summary>
+                                    <textarea name="answers[{{ $question->id }}][comment]" rows="2" placeholder="Note rapide pendant la visite" class="mt-2 block w-full rounded-md border-slate-300 text-sm focus:border-teal-600 focus:ring-teal-600" @input.debounce.900ms="save($el, {{ $question->id }})">{{ old('answers.'.$question->id.'.comment', $current?->comment) }}</textarea>
+                                </details>
                             </div>
                         @endforeach
                     </div>

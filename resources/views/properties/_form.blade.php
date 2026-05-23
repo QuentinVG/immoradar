@@ -1,88 +1,110 @@
 @csrf
 @php($isEditing = $property->exists)
 
+@unless($isEditing)
+    <input type="hidden" name="status" value="{{ old('status', $property->status ?: 'nouveau') }}">
+@endunless
+
 <div class="grid gap-6">
     <section class="ir-panel p-5">
-        <p class="text-sm font-black uppercase text-teal-700">Étape 1</p>
-        <h2 class="mt-1 text-lg font-black text-slate-950">Infos essentielles</h2>
-        <p class="mt-1 text-sm text-slate-600">Titre, ville, prix, surface. Avec ça, tu peux déjà commencer à comparer.</p>
-        <div class="mt-4 grid gap-4 md:grid-cols-2">
+        <div class="flex flex-wrap items-start justify-between gap-3">
             <div>
-                <x-input-label for="title" value="Titre" />
-                <x-text-input id="title" name="title" class="mt-1 block w-full" value="{{ old('title', $property->title) }}" required />
+                <p class="text-sm font-black uppercase text-teal-700">Saisie express</p>
+                <h2 class="mt-1 text-lg font-black text-slate-950">Crée le bien maintenant, complète après</h2>
+                <p class="mt-1 text-sm text-slate-600">Titre et ville suffisent. Prix, surface, DPE et trajet rendent le premier tri plus utile.</p>
             </div>
+            <span class="rounded-full bg-teal-50 px-3 py-1 text-xs font-black uppercase text-teal-800">2 champs requis</span>
+        </div>
+
+        <div class="mt-4 grid gap-4">
             <div>
-                <x-input-label for="city" value="Ville" />
-                <x-text-input id="city" name="city" class="mt-1 block w-full" value="{{ old('city', $property->city) }}" required />
+                <x-input-label for="listing_url" value="Lien annonce" />
+                <x-text-input id="listing_url" name="listing_url" type="url" class="mt-1 block w-full" value="{{ old('listing_url', $property->listing_url) }}" placeholder="https://..." />
             </div>
-            <div>
-                <x-input-label for="property_type" value="Type de bien" />
-                <select id="property_type" name="property_type" class="mt-1 block w-full rounded-md border-slate-300 focus:border-teal-600 focus:ring-teal-600">
-                    @foreach(['appartement','maison','terrain','autre'] as $value)
-                        <option value="{{ $value }}" @selected(old('property_type', $property->property_type) === $value)>{{ ucfirst($value) }}</option>
-                    @endforeach
-                </select>
+
+            <div class="grid gap-4 md:grid-cols-2">
+                <div>
+                    <x-input-label for="title" value="Titre" />
+                    <x-text-input id="title" name="title" class="mt-1 block w-full" value="{{ old('title', $property->title) }}" required placeholder="Maison Alixan, T3 centre..." />
+                </div>
+                <div>
+                    <x-input-label for="city" value="Ville" />
+                    <x-text-input id="city" name="city" class="mt-1 block w-full" value="{{ old('city', $property->city) }}" required />
+                </div>
             </div>
+
+            <div class="grid gap-4 md:grid-cols-5">
+                <div>
+                    <x-input-label for="price" value="Prix" />
+                    <x-text-input id="price" name="price" type="number" step="1000" class="mt-1 block w-full" value="{{ old('price', $property->price) }}" />
+                </div>
+                <div>
+                    <x-input-label for="surface" value="Surface" />
+                    <x-text-input id="surface" name="surface" type="number" step="1" class="mt-1 block w-full" value="{{ old('surface', $property->surface) }}" />
+                </div>
+                <div>
+                    <x-input-label for="dpe" value="DPE" />
+                    <select id="dpe" name="dpe" class="mt-1 block w-full rounded-md border-slate-300 focus:border-teal-600 focus:ring-teal-600">
+                        @foreach(['inconnu','A','B','C','D','E','F','G'] as $dpe)
+                            <option value="{{ $dpe }}" @selected(old('dpe', $property->dpe ?: 'inconnu') === $dpe)>{{ $dpe }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div>
+                    <x-input-label for="commute_minutes" value="Trajet min." />
+                    <x-text-input id="commute_minutes" name="commute_minutes" type="number" class="mt-1 block w-full" value="{{ old('commute_minutes', $property->commute_minutes) }}" />
+                </div>
+                <div>
+                    <x-input-label for="property_type" value="Type" />
+                    <select id="property_type" name="property_type" class="mt-1 block w-full rounded-md border-slate-300 focus:border-teal-600 focus:ring-teal-600">
+                        @foreach(['appartement','maison','terrain','autre'] as $value)
+                            <option value="{{ $value }}" @selected(old('property_type', $property->property_type ?: 'appartement') === $value)>{{ ucfirst($value) }}</option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <details class="ir-panel p-5" {{ $isEditing ? 'open' : '' }}>
+        <summary class="cursor-pointer text-lg font-black text-slate-950">Précisions utiles pour la comparaison</summary>
+        <p class="mt-2 text-sm text-slate-600">À remplir si l'annonce les donne déjà. Sinon, garde-les pour après la visite.</p>
+
+        <div class="mt-4 grid gap-4 md:grid-cols-4">
             <div>
                 <x-input-label for="transaction_type" value="Transaction" />
                 <select id="transaction_type" name="transaction_type" class="mt-1 block w-full rounded-md border-slate-300 focus:border-teal-600 focus:ring-teal-600">
                     @foreach(['achat' => 'Achat', 'location' => 'Location'] as $value => $label)
-                        <option value="{{ $value }}" @selected(old('transaction_type', $property->transaction_type) === $value)>{{ $label }}</option>
+                        <option value="{{ $value }}" @selected(old('transaction_type', $property->transaction_type ?: 'achat') === $value)>{{ $label }}</option>
                     @endforeach
                 </select>
             </div>
+            @if($isEditing)
+                <div>
+                    <x-input-label for="status" value="Statut" />
+                    <select id="status" name="status" class="mt-1 block w-full rounded-md border-slate-300 focus:border-teal-600 focus:ring-teal-600">
+                        @foreach(['nouveau','à_analyser','à_visiter','visité','favori','offre_envisagée','offre_faite','rejeté','archivé'] as $status)
+                            <option value="{{ $status }}" @selected(old('status', $property->status) === $status)>{{ str_replace('_', ' ', ucfirst($status)) }}</option>
+                        @endforeach
+                    </select>
+                </div>
+            @endif
             @foreach([
-                'price' => ['Prix', '1000'],
-                'surface' => ['Surface', '1'],
                 'rooms' => ['Pièces', '1'],
                 'bedrooms' => ['Chambres', '1'],
+                'floor' => ['Étage', '1'],
             ] as $field => [$label, $step])
                 <div>
                     <x-input-label :for="$field" :value="$label" />
                     <x-text-input :id="$field" :name="$field" type="number" :step="$step" class="mt-1 block w-full" value="{{ old($field, $property->{$field}) }}" />
                 </div>
             @endforeach
-        </div>
-    </section>
-
-    <section class="ir-panel p-5">
-        <p class="text-sm font-black uppercase text-teal-700">Étape 2</p>
-        <h2 class="mt-1 text-lg font-black text-slate-950">Critères utiles</h2>
-        <p class="mt-1 text-sm text-slate-600">DPE, trajet et stationnement suffisent souvent à faire sortir les premières alertes.</p>
-        <div class="mt-4 grid gap-4 md:grid-cols-4">
-            <div>
-                <x-input-label for="dpe" value="DPE" />
-                <select id="dpe" name="dpe" class="mt-1 block w-full rounded-md border-slate-300 focus:border-teal-600 focus:ring-teal-600">
-                    @foreach(['A','B','C','D','E','F','G','inconnu'] as $dpe)
-                        <option value="{{ $dpe }}" @selected(old('dpe', $property->dpe) === $dpe)>{{ $dpe }}</option>
-                    @endforeach
-                </select>
-            </div>
-            <div>
-                <x-input-label for="commute_minutes" value="Trajet min." />
-                <x-text-input id="commute_minutes" name="commute_minutes" type="number" class="mt-1 block w-full" value="{{ old('commute_minutes', $property->commute_minutes) }}" />
-            </div>
-            <div>
-                <x-input-label for="floor" value="Étage" />
-                <x-text-input id="floor" name="floor" type="number" class="mt-1 block w-full" value="{{ old('floor', $property->floor) }}" />
-            </div>
-            <div>
-                <x-input-label for="status" value="Statut" />
-                <select id="status" name="status" class="mt-1 block w-full rounded-md border-slate-300 focus:border-teal-600 focus:ring-teal-600">
-                    @foreach(['nouveau','à_analyser','à_visiter','visité','favori','offre_envisagée','offre_faite','rejeté','archivé'] as $status)
-                        <option value="{{ $status }}" @selected(old('status', $property->status) === $status)>{{ str_replace('_', ' ', ucfirst($status)) }}</option>
-                    @endforeach
-                </select>
-            </div>
-            <div>
-                <x-input-label for="listing_url" value="Lien annonce" />
-                <x-text-input id="listing_url" name="listing_url" type="url" class="mt-1 block w-full" value="{{ old('listing_url', $property->listing_url) }}" />
-            </div>
-            <div>
+            <div class="md:col-span-2">
                 <x-input-label for="address" value="Adresse" />
                 <x-text-input id="address" name="address" class="mt-1 block w-full" value="{{ old('address', $property->address) }}" />
             </div>
         </div>
+
         <div class="mt-4 grid gap-3 md:grid-cols-3">
             @foreach(['has_garage' => 'Garage', 'has_parking' => 'Parking', 'has_balcony' => 'Balcon', 'has_garden' => 'Jardin', 'has_cellar' => 'Cave', 'has_elevator' => 'Ascenseur'] as $field => $label)
                 <label class="flex items-center gap-3 rounded-md border border-slate-200 bg-white p-3 text-sm font-semibold text-slate-700">
@@ -91,11 +113,11 @@
                 </label>
             @endforeach
         </div>
-    </section>
+    </details>
 
     <details class="ir-panel border-amber-200 bg-amber-50/50 p-5" {{ $isEditing ? 'open' : '' }}>
         <summary class="cursor-pointer text-lg font-black text-slate-950">Budget détaillé et coût réel mensuel</summary>
-        <p class="mt-2 text-sm text-slate-600">À remplir quand tu veux fiabiliser la décision. Estimation indicative, à confirmer avec une banque, un courtier ou un professionnel.</p>
+        <p class="mt-2 text-sm text-slate-600">À remplir quand tu veux fiabiliser la décision. L'estimation reste indicative et doit être confirmée avec un professionnel.</p>
         <div class="mt-4 grid gap-4 md:grid-cols-4">
             @foreach([
                 'monthly_charges' => 'Charges / mois',

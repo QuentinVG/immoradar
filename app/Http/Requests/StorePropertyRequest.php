@@ -7,6 +7,31 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class StorePropertyRequest extends FormRequest
 {
+    protected function prepareForValidation(): void
+    {
+        if (! $this->isMethod('post')) {
+            return;
+        }
+
+        $defaults = [
+            'property_type' => 'appartement',
+            'transaction_type' => 'achat',
+            'dpe' => 'inconnu',
+            'status' => 'nouveau',
+        ];
+
+        $missingDefaults = [];
+        foreach ($defaults as $field => $value) {
+            if (! $this->filled($field)) {
+                $missingDefaults[$field] = $value;
+            }
+        }
+
+        if ($missingDefaults !== []) {
+            $this->merge($missingDefaults);
+        }
+    }
+
     /**
      * Determine if the user is authorized to make this request.
      */
